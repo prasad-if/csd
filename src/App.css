@@ -1,38 +1,229 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.View{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.leftpane{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 100vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.rightpane{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 100vh;
+}
+
+
+.topbar{
+  min-height: 8vh;
+  background-color: black;
+  color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.buttonbar{
+  padding: 10px;
+}
+
+.viewer{
+  padding-top: 0px;
+  height: 82vh;
+  width: 50vw;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: left;
+}
+
+.viewer1{
+  padding-top: 0px;
+  height: 82vh;
+  width: 100vw;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+}
+
+h2{
+  font-family: 'Noto Serif SC', serif;
+}
+
+.surveyform{
+  align-items: center;
+ 
+
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: column;
 }
 
-.App-link {
-  color: #61dafb;
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Track */
+::-webkit-scrollbar-track {
+  background: gray;  
 }
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: cornflowerblue;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: cornflowerblue; 
+}
+
+.MuiIconButton-label{
+  flex-direction: column!important;
+  font-size: small;
+}
+
+.MuiFilledInput-root.Mui-disabled {
+  background-color: #64b5f6!important;
+  font-size: small;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.navbar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  left: 50vw;
+  width: 50vw;
+  height: 10.5vh;
+  border-top: 1px solid #3f51b5; 
+  box-shadow: 5px 10px;
+}
+
+.navbar1{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 10.5vh;
+  border-top: 1px solid #3f51b5; 
+  box-shadow: 5px 10px;
+}
+
+.MuiInputBase-input{
+  color: black!important;
+  text-align: justify;
+}
+
+.MuiTypography-body1, .MuiMenuItem-root, .MuiInputBase-root{
+  font-family: 'Noto Serif SC', serif!important;
+  font-size: small!important;
+}
+
+.MuiSelect-select{
+  min-width: 30vw!important;
+}
+
+.question{
+  width: 95%;
+  border-radius: 15px;
+  background-color: #64b5f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  margin: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.question .text{
+  background-color: #64b5f6;
+  text-align: justify;
+  align-items: center;
+  font-family: 'Noto Serif SC', serif;
+  font-size: small;
+  font-weight: bold;
+}
+
+.question .help{
+  background-color: #64b5f6;
+  text-align: justify;
+  font-style: italic;
+  font-family: 'Noto Serif SC', serif;
+  font-size: small;
+}
+
+.question .options{
+  background-color: #64b5f6;
+  display: flex;
+  font-family: 'Noto Serif SC', serif;
+  font-size: small;
+}
+
+.centered {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+@media (max-width: 400px) {
+    .leftpane {
+      display: none;
+      visibility: hidden;
+      width: 0;
+    }
+  
+    .rightpane{
+      width: 100vw;
+    }
+
+    .viewer{
+      width: 99vw;
+      height: 82.5vh;
+    }
+
+    .navbar{
+      right: 50vw;
+      bottom: 0;
+      height: 9.5vh;
+      width: 100vw;
+      align-items: center;
+    }
+
+}
+
+

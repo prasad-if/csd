@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-surveyeditor-dev-114915-authRole",
+            "UnauthRoleArn": "arn:aws:iam::835932012292:role/amplify-surveyeditor-dev-114915-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::835932012292:role/amplify-surveyeditor-dev-114915-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-surveyeditor-dev-114915-deployment",
+            "UnauthRoleName": "amplify-surveyeditor-dev-114915-unauthRole",
+            "StackName": "amplify-surveyeditor-dev-114915",
+            "StackId": "arn:aws:cloudformation:us-east-1:835932012292:stack/amplify-surveyeditor-dev-114915/1adf36d0-4b04-11ea-b6e9-12cf2806950f",
+            "AmplifyAppId": "d2wc26z9th5wvk"
+        },
+        "categories": {
+            "auth": {
+                "surveyeditor2bfaab4d": {}
+            }
+        }
+    }
+}
