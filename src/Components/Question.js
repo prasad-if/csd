@@ -15,11 +15,10 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import SnapIcon from '@material-ui/icons/Camera';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { makeStyles } from '@material-ui/core/styles';
-
+import QrReader from 'react-qr-reader'
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,7 +90,6 @@ export default function Question(props){
     const [showcamera, setShowcamera] = React.useState(false);
     const [stream, setStream] = React.useState(null);
 
-
     function getPicture(){
         var video = document.getElementById('video');
 
@@ -104,8 +102,6 @@ export default function Question(props){
             }); 
         }
     }
-
-    
 
     function takePicture(){
         var canvas = document.getElementById('canvas');
@@ -131,6 +127,15 @@ export default function Question(props){
             track.stop();
           });
           setShowcamera(false);
+    }
+
+    function handleScan(data ) {
+        if (data) {
+            props.answers[props.uid] = data;
+        }
+    }
+    function handleScanError(err) {
+        console.error(err);
     }
 
     function validateConditionGroup(conditionGroup){
@@ -375,7 +380,15 @@ export default function Question(props){
             </form>
         );
     }
-
+    else if(props.question.type === 'qrcode'){
+        options = (
+            <form className={classes.root}>
+                <QrReader delay={300} onError={handleScanError} onScan={handleScan} style={{ width: '100%' }} />
+                <p>{props.answers[props.uid]}</p>
+            </form>
+        );
+    }
+   
     return (
         <div className="question">
             <div className="question text" style={{display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
