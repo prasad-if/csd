@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useRef, useEffect } from "react"
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,10 +15,13 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import SnapIcon from '@material-ui/icons/Camera';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
 import { makeStyles } from '@material-ui/core/styles';
-import QrReader from 'react-qr-reader'
+import QrReader from 'react-qr-reader';
+import { WasmDecoder } from "@impactdk/barcode-scanner";
+import { ReactBarcodeScanner } from "@impactdk/react-barcode-scanner";
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 let multiSelectValues = {};
 
 export default function Question(props){
+    const { current: decoder } = useRef(WasmDecoder.getInstance("/wasmassets"));
 
     async function getCurrentPosition(qid) {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -48,8 +52,11 @@ export default function Question(props){
           resultType: CameraResultType.Uri
         });
         console.log(image);
-      }
+    }
     
+    function handleBarcode(barcode) {
+        // Do something...
+    }
 
     function onChange(event){
         if(event.target.type === "checkbox"){
@@ -59,7 +66,6 @@ export default function Question(props){
         }
     }
 
- 
     function onMultiSelect(event, controlName){
         if(typeof multiSelectValues[controlName] == "undefined"){
             multiSelectValues[controlName] = [];
@@ -129,7 +135,7 @@ export default function Question(props){
           setShowcamera(false);
     }
 
-    function handleScan(data ) {
+    function handleScan(data) {
         if (data) {
             props.answers[props.uid] = data;
         }
@@ -163,6 +169,7 @@ export default function Question(props){
             console.log(error);
         }
     }
+
     function validateCondition(conditionArray){
         let result = false;
         //console.log(conditionArray);
@@ -383,8 +390,17 @@ export default function Question(props){
     else if(props.question.type === 'qrcode'){
         options = (
             <form className={classes.root}>
-                <QrReader delay={300} onError={handleScanError} onScan={handleScan} style={{ width: '100%' }} />
+                <QrReader onError={handleScanError} onScan={handleScan} style={{ width: '100%' }} />
                 <p>{props.answers[props.uid]}</p>
+            </form>
+        );
+    }
+    else if(props.question.type === 'barcode'){
+        options = (
+            <form className={classes.root}>
+               
+               <ReactBarcodeScanner decoder={decoder} onFindBarcode={handleBarcode} />
+
             </form>
         );
     }
