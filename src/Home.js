@@ -35,6 +35,19 @@ class Home extends React.Component {
         }
     }
 
+    processURL(url){
+        try{
+            fetch(url)
+            .then((r) => r.text())
+            .then(text  => {
+                this.processYAML(text);
+            })
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
 
@@ -97,6 +110,7 @@ class Home extends React.Component {
                                     height={this.state.height} 
                                     width={this.state.width} 
                                     processYAML={this.processYAML} 
+                                    processURL={this.processURL} 
                                     yaml={this.state.yaml}
                                     json={this.state.json}
                                     err={this.state.err}

@@ -1,6 +1,6 @@
 {
     "identityPoolName": "surveyeditor2bfaab4d_identitypool_2bfaab4d",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "survey2bfaab4d",
     "userPoolName": "surveyeditor2bfaab4d_userpool_2bfaab4d",
     "autoVerifiedAttributes": [
