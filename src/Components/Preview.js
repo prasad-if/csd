@@ -1,5 +1,6 @@
 import React from 'react';
 import ScrollableTabsButtonAuto from './ScrollableTabsButtonAuto'
+import { API } from 'aws-amplify';
 
 export default class Preview extends React.Component{
 
@@ -21,10 +22,19 @@ export default class Preview extends React.Component{
 
         this.state = mystateObj;
         this.store = this.store.bind(this);
+        this.submit = this.submit.bind(this);
         this.questionLookup = questionLookup;
     }
 
-
+    submit(){
+        console.log("&&& inside submit "+JSON.stringify(this.state))
+        API.post('api', '/survey/1', {body: this.state})
+        .then(response => {
+            console.log(response);
+        }).catch(error => {
+            console.log(error.response)
+        });
+    }
 
     store(field, value){
         this.setState( {...this.state, [field] : value})
@@ -59,6 +69,7 @@ export default class Preview extends React.Component{
                     answers={this.state} 
                     questionLookup={this.questionLookup}
                     editor={this.props.editor}
+                    submit={this.submit}
                 />
             )
         }

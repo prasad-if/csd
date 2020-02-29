@@ -11,6 +11,13 @@ import NextIcon from '@material-ui/icons/NavigateNext';
 export default function Navbar(props){
     const viewerStyle = props.editor ? "navbar" : "navbar1";
 
+    function submit(){
+        console.log("### inside submit ");
+        props.submit();
+        props.goto(props.current+1);
+    }
+
+
     if(props.current === 0){
         return (
             <div className={viewerStyle}>
@@ -29,7 +36,7 @@ export default function Navbar(props){
                 Previous
             </Button>
             <Button variant="outlined" color="primary" startIcon={<DoneIcon/>} 
-                onClick={() => props.goto(props.current+1)}>
+                onClick={submit}>
                 Submit
             </Button>
             </div>
