@@ -17,6 +17,11 @@
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
 			"build": true
+		},
+		"submitfunction": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
 		}
 	},
 	"storage": {
@@ -31,6 +36,22 @@
 						"Name",
 						"Arn",
 						"LambdaExecutionRole"
+					]
+				}
+			]
+		}
+	},
+	"api": {
+		"api": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "submitfunction",
+					"attributes": [
+						"Name",
+						"Arn"
 					]
 				}
 			]

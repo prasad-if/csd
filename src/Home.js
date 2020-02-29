@@ -14,6 +14,7 @@ class Home extends React.Component {
         this.state = {yaml:"", json:"", str: "", err: "", height: window.innerHeight, width: window.innerWidth };
         this.handleResize = this.handleResize.bind(this);
         this.processYAML = this.processYAML.bind(this);
+        this.processURL = this.processURL.bind(this);
     }
 
     processYAML(yaml) {
@@ -40,7 +41,15 @@ class Home extends React.Component {
             fetch(url)
             .then((r) => r.text())
             .then(text  => {
-                this.processYAML(text);
+                console.log(text);
+                console.log(this);
+                try{
+                    this.processYAML(text);
+                }
+                catch(error){
+                    console.log(error);
+                }
+                
             })
         }
         catch(err){
@@ -50,7 +59,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
-
+/*
         try{
             fetch("https://s3.ap-south-1.amazonaws.com/surveykshan.com/Templates/sample.yml")
             .then((r) => r.text())
@@ -63,7 +72,7 @@ class Home extends React.Component {
         catch(err){
             console.log(err);
         }
-      
+ */      
     }
 
     
@@ -97,6 +106,7 @@ class Home extends React.Component {
                                         height={this.state.height} 
                                         width={this.state.width} 
                                         processYAML={this.processYAML} 
+                                        processURL={this.processURL} 
                                         yaml={this.state.yaml}
                                         json={this.state.json}
                                         err={this.state.err}

@@ -127,7 +127,7 @@ const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.
           {thankstabpanel}
         </div>
       </div>
-      <Navbar current={value} total={tabs1.length} goto={goto} editor={props.editor} />
+      <Navbar current={value} total={tabs1.length} goto={goto} editor={props.editor} submit={props.submit} />
     </div>
   );
 }

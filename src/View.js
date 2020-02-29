@@ -3,11 +3,16 @@ import Preview from './Components/Preview';
 import {Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signIn } from './store/Actions/SignInAction'
+import SurveyPicker from './Components/SurveyPicker';
 
 
 import './App.css';
 
 class View extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = { surveys : []};
+    }
     componentDidMount(){
       this.props.signIn();
     }
@@ -54,6 +59,8 @@ class View extends React.Component {
                 <Preview json={this.props.json} setNav={this.setNav} editor={this.props.editor} /> 
               : typeof this.props.err !== 'undefined' && this.props.err !== null && this.props.err !== "" ? 
                 <div style={{color:'red'}}>Error: {this.props.err.message} at line number {this.props.err.parsedLine}  </div>
+              : this.props.editor === false && typeof this.props.user.username !== 'undefined' && this.props.user.username !== null && this.props.user.username !== "" ?
+                <SurveyPicker processURL={this.props.processURL} />
               : null}
           </div>
        )
