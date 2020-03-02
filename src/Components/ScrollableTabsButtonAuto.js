@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 export default function ScrollableTabsButtonAuto(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [lang, setLang] = React.useState('_en');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -45,70 +46,80 @@ export default function ScrollableTabsButtonAuto(props) {
   };
 
 
-   const tabs = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ? 
+   const tabs = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ?
       props.survey.sections.map((section, i) => {
         if(section === null){
           return null;
-        }    
+        }
         return (
-            <Tab 
-              label={typeof section.title !== 'undefined' ? section.title: ""} 
-              {...a11yProps(i)} 
-              key={'Section '+i} 
+            <Tab
+              label={typeof section.title !== 'undefined' ? section.title: ""}
+              {...a11yProps(i)}
+              key={'Section '+i}
             />
         )
-    }) : []; 
+    }) : [];
 
-    const tabs1 = [ <Tab label="Home"  key="Home" /> , ...tabs,  <Tab label="Thanks"  key="Thanks" /> ]
+    const langTitle = typeof props.survey["title"+lang] !== "undefined" && props.survey["title"+lang] !== null;
+    const title = langTitle ? props.survey["title"+lang] : props.survey.title;
+    const langInstruction = typeof props.survey["instructions"+lang] !== "undefined" && props.survey["instructions"+lang] !== null;
+    const instructions = langInstruction ? props.survey["instructions"+lang] : props.survey.instructions;
+    const langHeader = typeof props.survey["header"+lang] !== "undefined" && props.survey["header"+lang] !== null;
+    const hasHeader = typeof props.survey.header !== "undefined" && props.survey.header !== null;
+    const header = langHeader ? props.survey["header"+lang] : (hasHeader? props.survey.header: "Home");
+    const langConclusion = typeof props.survey["conclusion"+lang] !== "undefined" && props.survey["conclusion"+lang] !== null;
+    const conclusion = langConclusion ? props.survey["conclusion"+lang] : props.survey.conclusion;
+
+    const tabs1 = [ <Tab label={header}  key={header} /> , ...tabs,  <Tab label="Thanks"  key="Thanks" /> ]
 
     const hometabpanel = <TabPanel value={value} index={0}><div className="surveyform">
-                         { typeof props.survey.logo !== 'undefined' && props.survey.logo !== null ? 
+                         { typeof props.survey.logo !== 'undefined' && props.survey.logo !== null ?
                             <img src={props.survey.logo} alt="survey logo" />
                           : null}
-                          { typeof props.survey.title !== 'undefined'  && props.survey.title !== null  ? 
-                            <h2>{props.survey.title}</h2>
+                          { typeof title !== 'undefined'  && title !== null  ?
+                            <h2>{title}</h2>
                           : null}
-                           
+
                           </div>
-                          { typeof props.survey.instructions !== 'undefined' && props.survey.instructions !== null? 
+                          { typeof instructions !== 'undefined' && instructions !== null?
                             <div>
                                 <TextField id="instructions" fullWidth={true} margin="normal" disabled
-                                  multiline value={props.survey.instructions} variant="filled" /></div>
+                                  multiline value={instructions} variant="filled" /></div>
                           : null}
                           </TabPanel>
 
 const thankstabpanel = (<TabPanel value={value} index={tabs1.length - 1}>
                         <div className="surveyform">
-                          { typeof props.survey.conclusion !== 'undefined'  && props.survey.conclusion !== null  ? 
-                            <h2>{props.survey.conclusion}</h2>
+                          { typeof conclusion !== 'undefined'  && conclusion !== null  ?
+                            <h2>{conclusion}</h2>
                           : null}
                         </div></TabPanel>)
 
-const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ? 
+const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ?
                     props.survey.sections.map((section, i) => {
                       if(section === null){
                         return null;
                       }
 
                       return (
-                          <Section 
-                            questions={section.questions} 
-                            key={'Section '+i} 
+                          <Section
+                            questions={section.questions}
+                            key={'Section '+i}
                             value={value}
                             index={i+1}
-                            store={props.store} 
+                            store={props.store}
                             answers={props.answers}
                             questionLookup={props.questionLookup}
                             sectionId={i}
                           />
                       )
-                    }) : []; 
+                    }) : [];
 
     const viewerStyle = props.editor ? "viewer" : "viewer1";
 
   return (
     <div >
-      <div className={viewerStyle} > 
+      <div className={viewerStyle} >
         <div className={classes.root}>
           <AppBar position="sticky" color="default" >
             <Tabs

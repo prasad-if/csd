@@ -60,8 +60,20 @@ export default function Question(props){
         props.store(qid, image)
     }
 
-    function handleBarcode(barcode) {
-        // Do something...
+    function handleBarcode(qid, barcode) {
+        props.answers[qid] = barcode;
+    }
+
+    function getTimestamp(qid) {
+        props.answers[qid] = new Date().toUTCString();
+    }
+
+    function getUniqueNumber(qid) {
+        props.answers[qid] = Math.floor(Math.random() * 100000);
+    }
+
+    function getUserId(qid) {
+        props.answers[qid] = ""; //TODO: ram
     }
 
     function onChange(event){
@@ -192,8 +204,9 @@ export default function Question(props){
     else if(props.question.type === 'select'){
         const hasOptions = typeof props.question.options !== "undefined" && props.question.options !== null;
         const hasConditionalOptions = typeof props.question.conditionaloptions !== "undefined" && props.question.conditionaloptions !== null;
+        const langOptions = typeof props.question["options"+lang] !== "undefined" && props.question["options"+lang] !== null;
 
-        const vals = hasOptions ? props.question.options.map((option) => {
+        const vals = hasOptions ? (langOptions? props.question["options"+lang] : props.question.options).map((option) => {
             return (<MenuItem value={option} key={option}>{option}</MenuItem>)
         }) : null;
 
@@ -221,7 +234,9 @@ export default function Question(props){
     else if(props.question.type === 'radio'){
 
         try{
-        const vals = props.question.options.map((option) => {
+          const langOptions = typeof props.question["options"+lang] !== "undefined" && props.question["options"+lang] !== null;
+
+          const vals = (langOptions? props.question["options"+lang] : props.question.options).map((option) => {
             if(typeof option === 'string'){
                 return (<FormControlLabel value={option} key={option} control={<Radio color="primary" />} label={option} />)
             }
@@ -245,8 +260,9 @@ export default function Question(props){
     else if(props.question.type === 'multiselect'){
         const hasOptions = typeof props.question.options !== "undefined" && props.question.options !== null;
         const hasConditionalOptions = typeof props.question.conditionaloptions !== "undefined" && props.question.conditionaloptions !== null;
+        const langOptions = typeof props.question["options"+lang] !== "undefined" && props.question["options"+lang] !== null;
 
-        const vals = hasOptions ? props.question.options.map((option) => {
+        const vals = hasOptions ? (langOptions? props.question["options"+lang] : props.question.options).map((option) => {
             return (<FormControlLabel control=
                 {
                     <Checkbox
@@ -354,7 +370,30 @@ export default function Question(props){
             </form>
         );
     }
+    else if(props.question.type === 'hidden'){
 
+        if (props.question.value === 'geolocation')
+        {
+            getCurrentPosition(props.uid)
+        }
+        else if (props.question.value === 'timestamp')
+        {
+            getTimestamp(props.uid)
+        }
+        else if (props.question.value === 'uniquenumber')
+        {
+            getUniqueNumber(props.uid)
+        }
+        else if (props.question.value === 'userid')
+        {
+            getUserId(props.uid)
+        }
+        options = (
+            <form>
+               <input type="hidden" value={props.answers[props.uid]}/>
+            </form>
+        );
+    }
     return (
         <div className="question">
             <div className="question text" style={{display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
