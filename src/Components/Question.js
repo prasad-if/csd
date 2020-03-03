@@ -1,4 +1,4 @@
-import React, { useState , useRef } from "react"
+import React, { useContext , useState , useRef } from "react"
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,9 +17,11 @@ import QrReader from 'react-qr-reader';
 import { WasmDecoder } from "@impactdk/barcode-scanner";
 import { ReactBarcodeScanner } from "@impactdk/react-barcode-scanner";
 import GridComp from './GridComp'
+import UserContext from "./UserContext";
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
+const contextType = UserContext;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,7 +45,10 @@ let multiSelectValues = {};
 
 export default function Question(props){
     const { current: decoder } = useRef(WasmDecoder.getInstance("/wasmassets"));
-    const [lang, setLang] = useState('_en');
+    //const [lang, setLang] = useState('_en');
+    const user = useContext(UserContext)
+    const lang = user.lang;
+    console.log(user.lang);
 
     async function getCurrentPosition(qid) {
         const coordinates = await Geolocation.getCurrentPosition();

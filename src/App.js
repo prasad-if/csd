@@ -21,8 +21,9 @@ import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-
-
+import {DBConfig} from './Components/DBComp'
+import { IndexedDB , initDB } from 'react-indexed-db';
+import { UserProvider } from "./Components/UserContext";
 import Fade from '@material-ui/core/Fade';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -33,6 +34,8 @@ function PaperComponent(props) {
     </Draggable>
   );
 }
+
+initDB(DBConfig);
 
 class App extends React.Component {
 
@@ -47,8 +50,7 @@ class App extends React.Component {
     this.showDialog = this.showDialog.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-
-    this.state = {open: false, loading: false, category: "", survey: "", selection: ""};
+    this.state = {open: false, loading: false, category: "", survey: "", selection: "", lang: "_en"};
     //console.log(this.state);
   }
 
@@ -75,7 +77,7 @@ class App extends React.Component {
   handleCancel(){
     this.setState({...this.state, open:false, loading: false, selection:"" });
   }
-  
+
   handleSubmit(){
     //console.log("inside handleSubmit "+this.state);
     if(this.state.selection === "save"){
@@ -85,7 +87,7 @@ class App extends React.Component {
       })
       .catch(err => console.log(err))
       .then (result => {
-          this.setState({...this.state, open:false, loading: false });       
+          this.setState({...this.state, open:false, loading: false });
         }
       )
     }
@@ -97,8 +99,8 @@ class App extends React.Component {
       .catch(err => console.log(err))
       .then (result => {
         //console.log(result);
-          this.setState({...this.state, open:false, loading: false }); 
-          this.props.processURL(result);      
+          this.setState({...this.state, open:false, loading: false });
+          this.props.processURL(result);
         }
       )
     }
@@ -109,7 +111,11 @@ class App extends React.Component {
   }
 
   render() {
+    const user = { lang: this.state.lang };
+    console.log('>>>>>>>>>>>>'+user);
+
     return (
+      <UserProvider value={{user}}>
       <div className="App" style={{height: this.props.height, width: this.props.width}}>
           <div className="leftpane">
               <div className="topbar">
@@ -124,15 +130,15 @@ class App extends React.Component {
                 </div>
                 <div style={{margin:'20px'}}>
                     <Button variant="contained" startIcon={<OpenIcon/>} style={{margin:'10px'}} size="small"
-                    onClick={() => this.showDialog('open')}> 
+                    onClick={() => this.showDialog('open')}>
                     Open
                   </Button>
                   <Button variant="contained" startIcon={<SaveIcon/>} style={{margin:'10px'}} size="small"
-                  onClick={() => this.showDialog('save')}>                   
+                  onClick={() => this.showDialog('save')}>
                   Save
                   </Button>
                   <Button variant="contained" startIcon={<SaveAsIcon/>} style={{margin:'10px'}} size="small"
-                  onClick={() => this.showDialog('save')}> 
+                  onClick={() => this.showDialog('save')}>
                     Save As
                   </Button>
                 </div>
@@ -163,10 +169,10 @@ class App extends React.Component {
 
           <Dialog open={this.state.open} disableBackdropClick={true}
             onClose={this.handleCancel} PaperComponent={PaperComponent} >
-            <DialogTitle 
-                style={{ 
-                    cursor: 'move', 
-                    borderBottom: '1px groove lightgray' 
+            <DialogTitle
+                style={{
+                    cursor: 'move',
+                    borderBottom: '1px groove lightgray'
                 }} id="draggable-dialog-title"><b>Please provide the following details</b>
             </DialogTitle>
             <DialogContent>
@@ -175,20 +181,20 @@ class App extends React.Component {
             }}>
                 <LinearProgress />
             </Fade>
-                <TextField autoFocus key="category" fullWidth id="category" label="Category" 
+                <TextField autoFocus key="category" fullWidth id="category" label="Category"
                     onChange={this.handleChange} value={this.state.category} required/>
-                <TextField key="survey" fullWidth id="survey" label="Survey"  
+                <TextField key="survey" fullWidth id="survey" label="Survey"
                     onChange={this.handleChange} value={this.state.survey} required
                     onKeyDown={this.handleKeyDown} required />
 
             </DialogContent>
             <DialogActions>
                 <Button className="bbutton" onClick={this.handleCancel} > Cancel </Button>
-                <Button 
-                    className="bbutton" 
-                    onClick={this.handleSubmit} 
+                <Button
+                    className="bbutton"
+                    onClick={this.handleSubmit}
                     style={{
-                        color:'white', 
+                        color:'white',
                         backgroundColor:'rgb(74, 119, 229)',
                         width:'auto'
                     }}
@@ -196,7 +202,8 @@ class App extends React.Component {
             </DialogActions>
         </Dialog>
       </div>
-      
+      </UserProvider>
+
     );
   }
 }

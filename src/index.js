@@ -11,7 +11,7 @@ import "@ionic/pwa-elements";
 import { defineCustomElements } from '@ionic/pwa-elements/loader'; // add this line
 
 import Amplify from 'aws-amplify'
-import config from './aws-exports'  
+import config from './aws-exports'
 Amplify.configure(config)
 
 const store = createStore(RootReducer, applyMiddleware(thunk));
@@ -24,4 +24,3 @@ ReactDOM.render(<Provider store={store}><Home /></Provider>, document.getElement
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 defineCustomElements(window);
-

@@ -6,12 +6,13 @@ import logo from './logo.png';
 import YAML from "yamljs";
 import Login from './Components/Login'
 import {Redirect} from 'react-router-dom';
+import { UserProvider } from "./Components/UserContext";
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {yaml:"", json:"", str: "", err: "", height: window.innerHeight, width: window.innerWidth };
+        this.state = {yaml:"", json:"", str: "", err: "", height: window.innerHeight, width: window.innerWidth, lang: "_en" };
         this.handleResize = this.handleResize.bind(this);
         this.processYAML = this.processYAML.bind(this);
         this.processURL = this.processURL.bind(this);
@@ -49,7 +50,7 @@ class Home extends React.Component {
                 catch(error){
                     console.log(error);
                 }
-                
+
             })
         }
         catch(err){
@@ -72,24 +73,25 @@ class Home extends React.Component {
         catch(err){
             console.log(err);
         }
- */      
+ */
     }
 
-    
+
   handleResize() {
     console.log("Roload")
     this.setState( {...this.state, height: window.innerHeight, width: window.innerWidth });
   };
-  
+
   componentWillUnmount() {
     console.log("Unmount ")
     window.removeEventListener('resize', this.handleResize);
   }
 
+  render() {
+        const user = { lang: this.state.lang };
 
-
-    render() {
         return  (
+                <UserProvider value={user}>
                 <BrowserRouter>
                 <Switch>
                     <Route exact path='/'>
@@ -97,30 +99,30 @@ class Home extends React.Component {
                     </Route>
                     <Route exact path='/signin' render={
                             (props) => <Login {...props} logo={logo} />
-                        } 
+                        }
                     />
                     <Route exact path='/preview' render={
-                        (props) => <View 
-                                        {...props} 
+                        (props) => <View
+                                        {...props}
                                         logo={logo}
-                                        height={this.state.height} 
-                                        width={this.state.width} 
-                                        processYAML={this.processYAML} 
-                                        processURL={this.processURL} 
+                                        height={this.state.height}
+                                        width={this.state.width}
+                                        processYAML={this.processYAML}
+                                        processURL={this.processURL}
                                         yaml={this.state.yaml}
                                         json={this.state.json}
                                         err={this.state.err}
                                         editor={false}
-                                    />} 
+                                    />}
                     />
                     <Route path='/editor' render={
-                        (props) => <App 
-                                    {...props} 
-                                    logo={logo} 
-                                    height={this.state.height} 
-                                    width={this.state.width} 
-                                    processYAML={this.processYAML} 
-                                    processURL={this.processURL} 
+                        (props) => <App
+                                    {...props}
+                                    logo={logo}
+                                    height={this.state.height}
+                                    width={this.state.width}
+                                    processYAML={this.processYAML}
+                                    processURL={this.processURL}
                                     yaml={this.state.yaml}
                                     json={this.state.json}
                                     err={this.state.err}
@@ -129,6 +131,7 @@ class Home extends React.Component {
                     />
                 </Switch>
                 </BrowserRouter>
+                </UserProvider>
         )
         }
 }

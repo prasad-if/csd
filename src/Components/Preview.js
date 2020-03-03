@@ -1,6 +1,6 @@
 import React from 'react';
 import ScrollableTabsButtonAuto from './ScrollableTabsButtonAuto'
-import { API } from 'aws-amplify';
+import { useIndexedDB } from 'react-indexed-db';
 
 export default class Preview extends React.Component{
 
@@ -28,12 +28,16 @@ export default class Preview extends React.Component{
 
     submit(){
         console.log("&&& inside submit "+JSON.stringify(this.state))
-        API.post('api', '/survey/1', {body: this.state})
-        .then(response => {
-            console.log(response);
-        }).catch(error => {
-            console.log(error.response)
-        });
+        const { add } = useIndexedDB('surveys');
+
+        add(this.state).then(
+          event => {
+            console.log('ID Generated: ', event);
+          },
+          error => {
+            console.log(error);
+          }
+        );
     }
 
     store(field, value){
@@ -63,10 +67,10 @@ export default class Preview extends React.Component{
         } */
         else{
             return (
-                <ScrollableTabsButtonAuto 
-                    survey={this.props.json.survey}  
-                    store={this.store} 
-                    answers={this.state} 
+                <ScrollableTabsButtonAuto
+                    survey={this.props.json.survey}
+                    store={this.store}
+                    answers={this.state}
                     questionLookup={this.questionLookup}
                     editor={this.props.editor}
                     submit={this.submit}

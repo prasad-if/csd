@@ -6,12 +6,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
 
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-    },
+     paper: {
+       padding: theme.spacing(2),
+       textAlign: 'center',
+     },
 
-  }));
+}));
 
 export default function GridComp(props){
     const [state, setState] = React.useState({
@@ -20,10 +20,6 @@ export default function GridComp(props){
         addRows : false
     })
     const classes = useStyles();
-
-    React.useEffect(() => {
-        setState({...state, rowcount: 1, colcount:1, addRows: false})
-    }, [props, state]);
 
     function addCount(){
         setState({...state, rowcount : state.rowcount+1})
