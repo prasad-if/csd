@@ -1,11 +1,10 @@
 import React from 'react'
-import { Storage } from 'aws-amplify';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import * as surveydata from './niti-ipsos-surveys.json';
+import { SyncAllConfFiles } from './Util';
 
 class SurveyPicker extends React.Component {
     constructor(props){
@@ -17,40 +16,34 @@ class SurveyPicker extends React.Component {
     }
 
     handleClick(yaml){
-        Storage.get(yaml, {
-          contentType: 'text/plain'
-        })
-        .catch(err => console.log(err))
-        .then (result => {
-            this.props.processURL(result);
-          }
-        )
-
+        this.props.processURL(yaml)
     }
 
     componentDidMount(){
-
         this.setState({surveys:surveydata.surveys});
+        SyncAllConfFiles();
     }
 
     render(){
         const root = {
-          width:'80%',
+          width:'100%',
           justify: 'center',
           justifyContent:'space-around',
-          display: 'flex',
+          display: 'inline-grid',
+          gridTemplateColumns: 'auto auto',
           flexWrap: 'wrap',
-          overflow: 'hidden',
+          overflow: 'auto',
+          margin: '0 auto'
         }
         const list = {
-          width: 500,
-          height: 450,
+          width: '100%',
+          height: '95%'
         }
         const paper = {
-          maxWidth: 400,
+          maxWidth: '50%',
           margin: `10px 10px`,
           padding: '10px',
-          width: '60%',
+          width: '40%',
           paddingTop:'20px'
         }
 
@@ -58,15 +51,16 @@ class SurveyPicker extends React.Component {
             return (
 
                 <Paper key={i} style={paper}>
-                  <Grid container wrap="nowrap" spacing={1} onClick={() => this.handleClick(surv.yaml)}>
+                  <Grid container spacing={1} onClick={() => this.handleClick(surv.yaml)}>
                     <Grid item >
                       <Avatar src={surv.icon}>{surv.category}</Avatar>
                     </Grid>
                     <Grid item xs zeroMinWidth>
-                      <Typography noWrap>{surv.name}</Typography>
+                      <Typography>{surv.name}</Typography>
                     </Grid>
                   </Grid>
               </Paper>
+
             )
         });
 

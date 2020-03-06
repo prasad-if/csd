@@ -7,88 +7,78 @@ import YAML from "yamljs";
 import Login from './Components/Login'
 import {Redirect} from 'react-router-dom';
 import { UserProvider } from "./Components/UserContext";
+import { useIndexedDB } from 'react-indexed-db';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {yaml:"", json:"", str: "", err: "", height: window.innerHeight, width: window.innerWidth, lang: "_en" };
+        this.state = {yaml:"", json:"", str: "", err: "", height: window.innerHeight, width: window.innerWidth, username: "", lang: "_en" };
         this.handleResize = this.handleResize.bind(this);
         this.processYAML = this.processYAML.bind(this);
         this.processURL = this.processURL.bind(this);
     }
 
-    processYAML(yaml) {
-        let json = "";
-        try{
-            json = YAML.parse(yaml);
-            //console.log(JSON.stringify(json));
+    processYAML(survey) {
 
-            this.setState(
-            {
-                yaml : yaml,
-                json : json,
-                str  : JSON.stringify(json, undefined, 4),
-                err  : ""
-            });
-        }
-        catch(error){
-            this.setState({ ...this.state, yaml : yaml, err:error})
-        }
+            let json = "";
+            try{
+                json = YAML.parse(survey);
+
+                this.setState(
+                {
+                    yaml : survey,
+                    json : json,
+                    str  : JSON.stringify(json, undefined, 4),
+                    err  : ""
+                });
+            }
+            catch(error){
+                this.setState({ ...this.state, yaml : survey, err:error})
+            }
     }
 
     processURL(url){
-        try{
-            fetch(url)
-            .then((r) => r.text())
-            .then(text  => {
-                console.log(text);
-                console.log(this);
-                try{
-                    this.processYAML(text);
-                }
-                catch(error){
-                    console.log(error);
-                }
 
-            })
-        }
-        catch(err){
-            console.log(err);
-        }
+      const { getAll } = useIndexedDB('conf');
+      getAll().then( confFiles => {
+          const dbentry = confFiles.filter( conf => conf.id === url);
+
+          if(dbentry)
+          {
+              this.processYAML(dbentry[0].text);
+          }
+      }, err => {
+          console.log(err);
+      })
+
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.handleResize);
-/*
-        try{
-            fetch("https://s3.ap-south-1.amazonaws.com/surveykshan.com/Templates/sample.yml")
-            .then((r) => r.text())
-            .then(text  => {
-                //console.log(text);
-                //this.setState({ ...this.state, yaml: text});
-                this.processYAML(text);
-            })
-        }
-        catch(err){
-            console.log(err);
-        }
- */
+        const { getByID } = useIndexedDB('user');
+        getByID(0).then( user => {
+            if(user){
+              this.setState({ ...this.state, username: user.username, lang: user.lang});
+            }
+            else{
+              this.setState({ ...this.state, username: '', lang: user.lang});
+            }
+        }, event => { console.log(event)});
+
     }
 
 
   handleResize() {
-    console.log("Roload")
     this.setState( {...this.state, height: window.innerHeight, width: window.innerWidth });
   };
 
   componentWillUnmount() {
-    console.log("Unmount ")
     window.removeEventListener('resize', this.handleResize);
   }
 
   render() {
-        const user = { lang: this.state.lang };
+        const user = { username: this.state.username, lang: this.state.lang };
 
         return  (
                 <UserProvider value={user}>
@@ -98,12 +88,12 @@ class Home extends React.Component {
                         <Redirect to='/signin' />
                     </Route>
                     <Route exact path='/signin' render={
-                            (props) => <Login {...props} logo={logo} />
+                            (props) => <Login {...this.state} logo={logo} />
                         }
                     />
                     <Route exact path='/preview' render={
                         (props) => <View
-                                        {...props}
+                                        {...this.state}
                                         logo={logo}
                                         height={this.state.height}
                                         width={this.state.width}

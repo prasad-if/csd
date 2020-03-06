@@ -1,23 +1,18 @@
 const initialState = {
     loginError: null,
-    user : {}
+    user : {},
+    userlang: "_en"
 }
 
 const SignInReducer = (state = initialState, action) => {
     switch(action.type){
         case 'AUTH_SUCCESS':
-            const newstate1 = {...state, loginError:'', user: action.data};
-            return newstate1;
-
         case 'LOGIN_SUCCESS':
-            const newstate = {...state, loginError:'', user: action.data};
-            return newstate
-
+            return {...state, loginError:'', user: action.data, userlang: "_en"};
         case 'LOGIN_FAILED':
             return {...state, loginError: 'Invalid Email Address & Password combination. '}
-
         default:
-           return state  
+           return state
     }
 }
 

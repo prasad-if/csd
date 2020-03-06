@@ -1,4 +1,4 @@
-import React, { useContext , useState , useRef } from "react"
+import React, { useContext , useRef } from "react"
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -21,7 +21,6 @@ import UserContext from "./UserContext";
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
-const contextType = UserContext;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -343,7 +342,7 @@ export default function Question(props){
                 </Button>
             : null }
 
-            <img id="camera image" src={props.answers[props.uid].webPath} alt="captured pic" height="40%" style={{padding: '5px', objectFit:'cover'}} />
+            <img id="camera image" src={props.answers[props.uid].webPath} alt="" height="40%" style={{padding: '5px', objectFit:'cover'}} />
 
             </form>
         );
@@ -402,10 +401,10 @@ export default function Question(props){
     return (
         <div className="question">
             <div className="question text" style={{display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
-                {props.question[`text${lang}`]}{asterisk}  {chk}
+                {props.question[`text${lang}`]?props.question[`text${lang}`]:props.question.text}{asterisk}  {chk}
             </div>
             <div className="question help">
-                {props.question[`help${lang}`]}
+                {props.question[`help${lang}`]?props.question[`help${lang}`]:props.question.help}
             </div>
             <div className="question options">
                 {options}

@@ -49,10 +49,10 @@ class View extends React.Component {
 
                       }
                     </div>
-                    <div style={{float:'right', color:'white', fontSize:'small', alignItems:'right', align:'right'}}>
+                    <div style={{float:'right', paddingRight: 30, color:'white', fontSize:'small', alignItems:'right', align:'right'}}>
                          <Menu/>
                     </div>
-            
+
             </div>
               {typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== "" ?
                 <Preview json={this.props.json} setNav={this.setNav} editor={this.props.editor} />

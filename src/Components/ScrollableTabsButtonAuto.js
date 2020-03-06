@@ -10,7 +10,6 @@ import Navbar from './Navbar';
 import TabPanel from './TabPanel';
 import Section from './Section';
 
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 export default function ScrollableTabsButtonAuto(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [lang, setLang] = React.useState('_en');
+  const [lang] = React.useState('_en');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -44,7 +43,6 @@ export default function ScrollableTabsButtonAuto(props) {
   const goto = (newValue) => {
     setValue(newValue);
   };
-
 
    const tabs = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ?
       props.survey.sections.map((section, i) => {

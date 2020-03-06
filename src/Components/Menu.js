@@ -6,12 +6,14 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MoreVert from '@material-ui/icons/MoreVert';
+import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SyncIcon from '@material-ui/icons/Sync';
 import TranslateIcon from '@material-ui/icons/Translate';
-import { useIndexedDB } from 'react-indexed-db';
-import { API } from 'aws-amplify';
+import {LocaleConfig} from "./Config";
+import { signOut } from '../store/Actions/SignOutAction'
+import { connect } from 'react-redux';
+import { SyncAllSurveys, SyncAllConfFiles, SaveLocale } from './Util'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,40 +24,22 @@ const useStyles = makeStyles(theme => ({
   list: {
     width: 250,
   },
-  fullList: {
-    width: 'auto',
-  },
+  selected: {
+    color: 'red'
+  }
 }));
 
-export default function Menu() {
+function Menu(props) {
   const classes = useStyles();
   const [state, setState] = React.useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
+    user: {},
+    userlang: "_en"
   });
 
-  function SyncOne(survey){
-
-    API.post('api', '/survey/1', {body: survey})
-    .then(response => {
-        console.log(response);
-    }).catch(error => {
-        console.log(error.response)
-    });
-
-  }
-
-  function SyncAll() {
-    console.log('sync all invoked....')
-    const { getAll } = useIndexedDB('surveys');
-    getAll().then( surveysFromDB => {
-          surveysFromDB.forEach((eachSurveyFromDB) => {
-            SyncOne(eachSurveyFromDB);
-          });
-        }
-      );
+  const changeLang = (lang) => {
+    console.log(props)
+    setState({...state, user: props.user, userlang: lang});
+    SaveLocale(props.user, lang)
   }
 
   const toggleDrawer = (side, open) => event => {
@@ -69,21 +53,29 @@ export default function Menu() {
   const sideList = side => (
     <div className={classes.list} role="presentation">
       <List>
-        {['English', 'Hindi', 'Telugu', 'Kannada'].map((text, index) => (
-          <ListItem button key={text}>
+        {LocaleConfig.languages.map((item, index) =>(
+          <ListItem button key={item.id} style={props.lang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
             <ListItemIcon><TranslateIcon /></ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        {['Sync All', 'Logout'].map((text, index) => (
-          <ListItem button key={text} onClick={SyncAll}>
-            <ListItemIcon>{index % 2 === 0 ? <SyncIcon /> : <ExitToAppIcon  />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(props.username)}>
+        <ListItemIcon><SyncIcon /></ListItemIcon>
+        <ListItemText primary='Sync Surveys' />
+      </ListItem>
+
+      <ListItem button key='Sync2' onClick={() => SyncAllConfFiles()}>
+        <ListItemIcon><SyncIcon /></ListItemIcon>
+        <ListItemText primary='Sync Questionnaires' />
+      </ListItem>
+
+      <ListItem button key='exit' onClick={props.signOut}>
+        <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+        <ListItemText primary='Logout' />
+      </ListItem>
       </List>
     </div>
   );
@@ -91,7 +83,7 @@ export default function Menu() {
   return (
     <div className={classes.root}>
 
-      <MoreVert color="secondary" onClick={toggleDrawer('right', true)}/>
+      <MenuIcon color="secondary" onClick={toggleDrawer('right', true)}/>
 
       <Drawer anchor="right" open={state.right} onClose={toggleDrawer('right', false)}>
         {sideList('right')}
@@ -99,3 +91,18 @@ export default function Menu() {
     </div>
   );
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+          signOut: () => dispatch(signOut())
+      }
+}
+
+const mapStateToProps = state => {
+  return {
+    user: state.signIn.user,
+    userlang: state.signIn.userlang
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Menu);

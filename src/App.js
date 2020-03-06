@@ -16,13 +16,12 @@ import { Storage } from 'aws-amplify';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import {DBConfig} from './Components/DBComp'
-import { IndexedDB , initDB } from 'react-indexed-db';
+import {DBConfig} from './Components/Config'
+import { initDB, useIndexedDB } from 'react-indexed-db';
 import { UserProvider } from "./Components/UserContext";
 import Fade from '@material-ui/core/Fade';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -50,8 +49,13 @@ class App extends React.Component {
     this.showDialog = this.showDialog.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    this.state = {open: false, loading: false, category: "", survey: "", selection: "", lang: "_en"};
-    //console.log(this.state);
+    this.state = {open: false, loading: false, category: "", survey: "", selection: "", username: "", lang: "_en"};
+    const { getByID } = useIndexedDB('user');
+    getByID(0).then( user => {
+        if(user){
+          this.state = {open: false, loading: false, category: "", survey: "", selection: "", username: user.username, lang: user.lang};
+        }
+    }, event => { console.log(event)});
   }
 
   process(){
@@ -71,7 +75,6 @@ class App extends React.Component {
       [e.target.id] : e.target.value
     })
 
-    //console.log(this.state);
   }
 
   handleCancel(){
@@ -79,7 +82,6 @@ class App extends React.Component {
   }
 
   handleSubmit(){
-    //console.log("inside handleSubmit "+this.state);
     if(this.state.selection === "save"){
       this.setState({...this.state, loading: true });
       Storage.put(this.state.category+'/'+this.state.survey+'.yml', this.props.yaml, {
@@ -98,7 +100,6 @@ class App extends React.Component {
       })
       .catch(err => console.log(err))
       .then (result => {
-        //console.log(result);
           this.setState({...this.state, open:false, loading: false });
           this.props.processURL(result);
         }
@@ -111,9 +112,9 @@ class App extends React.Component {
   }
 
   render() {
-    const user = { lang: this.state.lang };
-    console.log('>>>>>>>>>>>>'+user);
 
+    const user = { username: this.state.username, lang: this.state.lang };
+    console.log(">>>>>>>user object ", user)
     return (
       <UserProvider value={{user}}>
       <div className="App" style={{height: this.props.height, width: this.props.width}}>
@@ -184,7 +185,7 @@ class App extends React.Component {
                 <TextField autoFocus key="category" fullWidth id="category" label="Category"
                     onChange={this.handleChange} value={this.state.category} required/>
                 <TextField key="survey" fullWidth id="survey" label="Survey"
-                    onChange={this.handleChange} value={this.state.survey} required
+                    onChange={this.handleChange} value={this.state.survey}
                     onKeyDown={this.handleKeyDown} required />
 
             </DialogContent>
