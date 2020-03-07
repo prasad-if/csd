@@ -29,7 +29,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "install-wasm-decoder ./wasmassets && react-scripts build",
+    "copy": "copyfiles -a build/* mobile/src && copyfiles -a build/* mobile/build",
+    "android": "cd mobile/android && gradlew assembleDebug",
+    "build": "install-wasm-decoder ./wasmassets && react-scripts build && npm run copy && npm run android",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
