@@ -51,15 +51,15 @@ const SyncSurvey = (dbentry, username) => {
       }
   })});
 
+  const { deleteRecord  } = useIndexedDB('surveys');
   API.post('api', '/survey/1', {body: dbentry})
   .then(response => {
-      console.log(response.id);
-      const { deleteRecord  } = useIndexedDB('surveys');
+  
       deleteRecord(dbentry.id).then({
       }).catch(error => {
           console.log(error.response)
       });
-   }
+   });
 }
 
 const SyncAllSurveys = (username) => {
