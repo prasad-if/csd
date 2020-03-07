@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "com.ideafactors.surveykshan",
   "appName": "mobileapp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
