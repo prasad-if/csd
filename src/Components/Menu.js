@@ -62,7 +62,7 @@ function Menu(props) {
       </List>
       <Divider />
       <List>
-      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(props.username)}>
+      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(props.user.username)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
         <ListItemText primary='Sync Surveys' />
       </ListItem>

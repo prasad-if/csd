@@ -30,7 +30,7 @@ export default class Preview extends React.Component{
         console.log("&&& inside submit "+JSON.stringify(this.state))
         const { add } = useIndexedDB('surveys');
 
-        add(this.state).then(
+        add({survey:this.props.json.survey, answers:this.state}).then(
           event => {
             console.log('ID Generated: ', event);
           },

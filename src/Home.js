@@ -43,8 +43,7 @@ class Home extends React.Component {
       const { getAll } = useIndexedDB('conf');
       getAll().then( confFiles => {
           const dbentry = confFiles.filter( conf => conf.id === url);
-
-          if(dbentry)
+          if(dbentry.length > 0)
           {
               this.processYAML(dbentry[0].text);
           }

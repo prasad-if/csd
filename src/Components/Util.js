@@ -38,34 +38,36 @@ const SyncAllConfFiles = () => {
     });
 }
 
-const SyncSurvey = (survey, username) => {
+const SyncSurvey = (dbentry, username) => {
 
-  survey.questions.forEach((quest) => {
-    if (quest.type === 'image') {
-        const pic = survey.answers[quest.id];
-        const type = pic.webPath.slice(pic.indexOf('.')+1);
-        const s3url = survey.id+'/'+username+'_'+quest.id+'_'+(new Date().getTime()+'.'+type);
-        Push2S3(s3url, type, pic);
-        survey.answers[quest.id] = pic;
-    }
-  });
+  dbentry.survey.sections.map( (section, sidx) => {
+      section.questions.map( (quest, idx) =>  {
+      const answer = dbentry.answers['s'+sidx+'_q'+idx];
+      if (quest.type === 'image' && answer !== undefined && answer.webPath && answer.webPath !== '') {
+        const type = answer.format;
+        const s3url = dbentry.survey.id+'/'+username+'_'+quest.id+'_'+(new Date().getTime()+'.'+type);
+        Push2S3(s3url, type, answer.webPath.slice(answer.webPath.indexOf(':')));
+        dbentry.answers[section.id+'_'+quest.id] = answer;
+      }
+  })});
 
-  API.post('api', '/survey/1', {body: survey})
+  API.post('api', '/survey/1', {body: dbentry})
   .then(response => {
       console.log(response.id);
-
-  }).catch(error => {
-      console.log(error.response)
-  });
-
+      const { deleteRecord  } = useIndexedDB('surveys');
+      deleteRecord(dbentry.id).then({
+      }).catch(error => {
+          console.log(error.response)
+      });
+   }
 }
 
 const SyncAllSurveys = (username) => {
   console.log(username)
   const { getAll } = useIndexedDB('surveys');
   getAll().then( surveysFromDB => {
-        surveysFromDB.forEach((eachSurveyFromDB) => {
-          SyncSurvey(eachSurveyFromDB, username);
+        surveysFromDB.map( (dbentry) => {
+          SyncSurvey(dbentry, username);
         });
       }
     );
@@ -82,12 +84,13 @@ const SaveLocale = (user, locale) => {
 }
 
 const Push2S3 = (url, type, media) => {
+    console.log(url, type)
     Storage.put(url, media, {
         contentType: 'image/'+type
     })
     .catch(err => console.log(err))
     .then (result => {
-        this.setState({...this.state, open:false, loading: false });
+        //this.setState({...this.state, open:false, loading: false });
     })
 }
 
