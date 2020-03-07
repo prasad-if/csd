@@ -12,6 +12,7 @@
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "aws-amplify": "^2.2.4",
+    "copyfiles": "^2.2.0",
     "react": "^16.12.0",
     "react-ace": "^8.0.0",
     "react-barcode-reader": "0.0.1",
@@ -29,9 +30,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "copy": "copyfiles -a build/* mobile/src && copyfiles -a build/* mobile/build",
-    "android": "cd mobile/android && gradlew assembleDebug",
-    "build": "install-wasm-decoder ./wasmassets && react-scripts build && npm run copy && npm run android",
+    "copy": "copyfiles -a build/* mobileapp/src && copyfiles -a build/* mobileapp/build",
+    "android": "cd mobileapp/android && ./gradlew assembleDebug",
+    "build": "react-scripts build && npm run copy && npm run android",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
