@@ -30,10 +30,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Menu(props) {
+  console.log(props)
   const classes = useStyles();
   const [state, setState] = React.useState({
-    user: {},
-    userlang: "_en"
+    user: props.user,
+    userlang: props.userlang
   });
 
   const changeLang = (lang) => {
@@ -54,7 +55,7 @@ function Menu(props) {
     <div className={classes.list} role="presentation">
       <List>
         {LocaleConfig.languages.map((item, index) =>(
-          <ListItem button key={item.id} style={props.lang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
+          <ListItem button key={item.id} style={state.userlang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
             <ListItemIcon><TranslateIcon /></ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItem>
@@ -62,7 +63,7 @@ function Menu(props) {
       </List>
       <Divider />
       <List>
-      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(props.user.username)}>
+      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
         <ListItemText primary='Sync Surveys' />
       </ListItem>
