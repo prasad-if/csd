@@ -1,5 +1,6 @@
 import React from 'react'
 import App from './App'
+import Dashboard from './Dashboard'
 import View from './View'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import logo from './logo.png';
@@ -32,6 +33,8 @@ class Home extends React.Component {
                     str  : JSON.stringify(json, undefined, 4),
                     err  : ""
                 });
+
+                console.log(this.state)
             }
             catch(error){
                 this.setState({ ...this.state, yaml : survey, err:error})
@@ -50,6 +53,26 @@ class Home extends React.Component {
       }, err => {
           console.log(err);
       })
+
+    }
+
+    processS3URL(url){
+      console.log(url)
+      fetch(url)
+             .then((r) => r.text())
+             .then(text  => {
+                 this.processYAML(text);
+                 console.log(text);
+                 console.log(this);
+                 try{
+                     this.processYAML(text);
+                     console.log(text)
+                 }
+                 catch(error){
+                     console.log(error);
+                 }
+
+             })
 
     }
 
@@ -111,7 +134,21 @@ class Home extends React.Component {
                                     height={this.state.height}
                                     width={this.state.width}
                                     processYAML={this.processYAML}
-                                    processURL={this.processURL}
+                                    processURL={this.processS3URL}
+                                    yaml={this.state.yaml}
+                                    json={this.state.json}
+                                    err={this.state.err}
+                                    editor={true}
+                                /> }
+                    />
+                    <Route path='/dashboard' render={
+                        (props) => <Dashboard
+                                    {...props}
+                                    logo={logo}
+                                    height={this.state.height}
+                                    width={this.state.width}
+                                    processYAML={this.processYAML}
+                                    processURL={this.processS3URL}
                                     yaml={this.state.yaml}
                                     json={this.state.json}
                                     err={this.state.err}
