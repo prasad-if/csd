@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
 
 
 app.post('/survey/*', function(req, res) {
+  console.log("Inside survey");
   res.json({success: 'post call succeed!', url: req.url, body: req.body})
 });
 

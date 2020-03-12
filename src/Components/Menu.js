@@ -65,7 +65,7 @@ function Menu(props) {
       <List>
       <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
-        <ListItemText primary='Sync Surveys' />
+        <ListItemText primary='Sync Survey Responses' />
       </ListItem>
 
       <ListItem button key='Sync2' onClick={() => SyncAllConfFiles()}>

@@ -63,7 +63,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-surveyeditor-dev-114915-deployment",
-					"S3Key": "amplify-builds/submitfunction-4530573472646e414b52-build.zip"
+					"S3Key": "amplify-builds/submitfunction-2f32336d4d672b2b6a62-build.zip"
 				}
 			}
 		},

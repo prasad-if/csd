@@ -50,7 +50,7 @@ class View extends React.Component {
                     } alt="Surveykshan" height='40px' style={{padding: '5px', objectFit:'cover'}} />
                   </div>
                     <div style={{color:'white', fontSize:'medium', float: 'left'}}>
-                      { (typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== "" && this.props.err == "" &&
+                      { (typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== "" &&
                         typeof this.props.json.survey  !== 'undefined' &&
                         typeof this.props.json.survey.title !== 'undefined' &&
                         this.props.json.survey.title !== null &&

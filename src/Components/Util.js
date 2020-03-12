@@ -58,6 +58,8 @@ const SyncSurvey = async (dbentry, username) => {
       }
   })});
 
+  console.log(dbentry);
+  
   const { deleteRecord  } = useIndexedDB('surveys');
   API.post('api', '/survey/1', {body: dbentry})
   .then(response => {

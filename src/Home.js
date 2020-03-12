@@ -5,6 +5,7 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import logo from './logo.png';
 import YAML from "yamljs";
 import Login from './Components/Login'
+import ChangePassword from './Components/ChangePassword'
 import {Redirect} from 'react-router-dom';
 import { UserProvider } from "./Components/UserContext";
 import { useIndexedDB } from 'react-indexed-db';
@@ -89,6 +90,10 @@ class Home extends React.Component {
                     </Route>
                     <Route exact path='/signin' render={
                             (props) => <Login {...this.state} logo={logo} />
+                        }
+                    />
+                    <Route exact path='/changepassword' render={
+                            (props) => <ChangePassword {...this.state} logo={logo} />
                         }
                     />
                     <Route exact path='/preview' render={
