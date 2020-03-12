@@ -39,7 +39,7 @@ class View extends React.Component {
             <div className="topbar">
                   <div style={{float:'left', height:'50px', display:'flex', flexDirection:'row', alignItems:'center'}}>
                     { this.props.editor === false && this.props.json !== null && this.props.json !== "" ?
-                      <ArrowBackIosIcon height='40px' style={{paddingLeft: '5px'}} onClick={backToListing} />
+                      <ArrowBackIosIcon height='40px' style={{paddingLeft: '5px', cursor: 'pointer'}} onClick={backToListing} />
                       : null }
                     <img src={
                       (typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== ""  &&
