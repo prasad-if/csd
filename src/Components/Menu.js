@@ -54,7 +54,7 @@ function Menu(props) {
     <div className={classes.list} role="presentation">
       <List>
         {LocaleConfig.languages.map((item, index) =>(
-          <ListItem button key={item.id} style={props.lang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
+          <ListItem button key={item.id} style={state.userlang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
             <ListItemIcon><TranslateIcon /></ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItem>
