@@ -38,7 +38,7 @@ const SyncAllConfFiles = () => {
     });
 }
 
-const SyncSurvey = async (dbentry, username) => {
+const SyncSurvey = async (dbentry, username, updateCount) => {
 
   await dbentry.survey.sections.map( (section, sidx) => {
       section.questions.map( (quest, idx) =>  {
@@ -61,20 +61,21 @@ const SyncSurvey = async (dbentry, username) => {
   const { deleteRecord  } = useIndexedDB('surveys');
   API.post('api', '/survey/1', {body: dbentry})
   .then(response => {
-
-      deleteRecord(dbentry.id).then({
+      deleteRecord(dbentry.id).then((result) => {
+          updateCount()
       }).catch(error => {
           console.log(error.response)
       });
    });
 }
 
-const SyncAllSurveys = (username) => {
+
+const SyncAllSurveys = (username, updateCount) => {
   console.log(username)
   const { getAll } = useIndexedDB('surveys');
   getAll().then( surveysFromDB => {
         surveysFromDB.map( (dbentry) => {
-          SyncSurvey(dbentry, username);
+          SyncSurvey(dbentry, username, updateCount);
         });
       }
     );

@@ -507,11 +507,11 @@ export default function Question(props){
     }
 
     return (
-        <div className="question" style={props.question.type === 'hidden' ? { display:'none'}: {}}>
-            <div className="question text" style={props.subquestion !== undefined ? { display:'none'}: {display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
+        <div className="question" style={props.question.type === 'hidden' ? { position: 'absolute !important',top: '-9999px !important', left: '-9999px !important'}: {}}>
+            <div className="question text" style={props.subquestion !== undefined ? { position: 'absolute', overflow: 'hidden', clip: 'rect(0 0 0 0)',height: '1px', width: '1px', margin: '-1px', padding: '0', border: '0'}: {display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
                 {props.question[`text${lang}`]?props.question[`text${lang}`]:props.question.text}{asterisk}  {chk}
             </div>
-            <div className="question help" style={props.subquestion !== undefined ? { display:'none'}: {}}>
+            <div className="question help" style={props.subquestion !== undefined ? { position: 'absolute', overflow: 'hidden', clip: 'rect(0 0 0 0)',height: '1px', width: '1px', margin: '-1px', padding: '0', border: '0'}: {}}>
                 {props.question[`help${lang}`]?props.question[`help${lang}`]:props.question.help}
             </div>
             <div className="question options">

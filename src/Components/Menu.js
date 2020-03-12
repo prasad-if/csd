@@ -43,7 +43,6 @@ function Menu(props) {
   const {getAll } = useIndexedDB('surveys');
 
   const updateCount = () => {
-    SyncAllSurveys(state.user.username)
     getAll().then( data => {
       setState({...state, surveycount :''+data.length})
     })
@@ -74,7 +73,7 @@ function Menu(props) {
       </List>
       <Divider />
       <List>
-      <ListItem button key='Sync1' onClick={updateCount}>
+      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username, updateCount)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
         <ListItemText primary={'Sync Surveys ('+state.surveycount+')'} />
       </ListItem>
