@@ -23,7 +23,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
@@ -50,7 +49,7 @@ export default function Question(props){
     //const [lang, setLang] = useState('_en');
     const user = useContext(UserContext)
     const lang = user.lang;
-    console.log(user)
+
     const [state, setState] = React.useState({
             rowcount : 1,
             colcount : 1,

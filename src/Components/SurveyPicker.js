@@ -25,17 +25,7 @@ class SurveyPicker extends React.Component {
     }
 
     render(){
-        const root = {
-          width:'100%',
-          justify: 'center',
-          justifyContent:'space-around',
-          display: 'inline-grid',
-          gridTemplateColumns: 'auto auto',
-          flexWrap: 'wrap',
-          overflow: 'auto',
-          margin: '0 auto',
-          border: '1px solid red'
-        }
+        
         const list = {
           width: '100%',
           height: '95vh',

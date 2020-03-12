@@ -34,8 +34,6 @@ class Home extends React.Component {
                     str  : JSON.stringify(json, undefined, 4),
                     err  : ""
                 });
-
-                console.log(this.state)
             }
             catch(error){
                 this.setState({ ...this.state, yaml : survey, json: "", err:error})
@@ -59,7 +57,7 @@ class Home extends React.Component {
     }
 
     processS3URL(url){
-      console.log(url)
+
       fetch(url)
              .then((r) => r.text())
              .then(text  => {
