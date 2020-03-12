@@ -16,7 +16,7 @@ import QrReader from 'react-qr-reader';
 import { WasmDecoder } from "@impactdk/barcode-scanner";
 import { ReactBarcodeScanner } from "@impactdk/react-barcode-scanner";
 import UserContext from "./UserContext";
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -24,7 +24,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
@@ -42,25 +41,6 @@ const useStyles = makeStyles(theme => ({
     },
   },
 }));
-
-const StyledTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-}))(TableRow);
-
 
 let multiSelectValues = {};
 
@@ -419,9 +399,9 @@ export default function Question(props){
 
       const colheader = props.question.cols.map((col) => {
           return (
-              <StyledTableCell>
-                  <div className={classes.paper}>{col.text}</div>
-              </StyledTableCell>
+              <TableCell>
+                  <div>{col.text}</div>
+              </TableCell>
           )
       })
 
@@ -430,7 +410,7 @@ export default function Question(props){
           const key = props.uid+'_row'+rowid+'_col'+j;
 
           return (
-              <StyledTableCell>
+              <TableCell style={{marginLeft:'0px', paddingLeft: '0px'}}>
 
               <Question
                 uid={key}
@@ -443,7 +423,7 @@ export default function Question(props){
                 questionLookup={[]}
               />
 
-              </StyledTableCell>
+              </TableCell>
           )
         })
      };
@@ -451,36 +431,36 @@ export default function Question(props){
       const rowdata = props.question.rows.count === undefined ? props.question.rows.map((row, i) => {
 
           return (
-              <StyledTableRow nowrap={true} style={{width:'100%'}}>
-                <StyledTableCell style={{marginLeft:'0px', paddingLeft:'0px'}}>
-                    <div className={classes.paper}>{row.text}</div>
-                </StyledTableCell>
+              <TableRow nowrap={true} style={{width:'100%'}}>
+                <TableCell >
+                    <div>{row.text}</div>
+                </TableCell>
 
                 {coldata(i)}
-              </StyledTableRow>
+              </TableRow>
           )
       }): Array.from(Array(state.rowcount).keys()).map((i) => {
 
           return (
-              <StyledTableRow>
-                <StyledTableCell style={{marginLeft:'0px', paddingLeft:'0px'}}>
-                    <div className={classes.paper}>{i+1}</div>
-                </StyledTableCell>
+              <TableRow>
+                <TableCell>
+                    <div>{i+1}</div>
+                </TableCell>
 
                 {coldata(i)}
 
-              </StyledTableRow>
+              </TableRow>
           )
       });
 
       options = (
             <form className={classes.root}>
 
-               <TableContainer component={Paper}>
-               <Table className={classes.table} aria-label="customized table">
+               <TableContainer>
+               <Table aria-label="customized table">
                <TableHead>
                <TableRow>
-                      <StyledTableCell debug> </StyledTableCell>
+                      <TableCell debug> </TableCell>
                       {colheader}
                </TableRow>
                </TableHead>

@@ -14,6 +14,7 @@ import {LocaleConfig} from "./Config";
 import { signOut } from '../store/Actions/SignOutAction'
 import { connect } from 'react-redux';
 import { SyncAllSurveys, SyncAllConfFiles, SaveLocale } from './Util'
+import { useIndexedDB } from 'react-indexed-db';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,15 +31,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Menu(props) {
-  console.log(props)
+  //console.log(props)
   const classes = useStyles();
+
   const [state, setState] = React.useState({
     user: props.user,
-    userlang: props.userlang
+    userlang: props.userlang,
+    surveycount: ''
   });
 
+  const {getAll } = useIndexedDB('surveys');
+
+  const updateCount = () => {
+    SyncAllSurveys(state.user.username)
+    getAll().then( data => {
+      setState({...state, surveycount :''+data.length})
+    })
+  }
+
   const changeLang = (lang) => {
-    console.log(props)
     setState({...state, user: props.user, userlang: lang});
     SaveLocale(props.user, lang)
   }
@@ -63,9 +74,9 @@ function Menu(props) {
       </List>
       <Divider />
       <List>
-      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username)}>
+      <ListItem button key='Sync1' onClick={updateCount}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
-        <ListItemText primary='Sync Surveys' />
+        <ListItemText primary={'Sync Surveys ('+state.surveycount+')'} />
       </ListItem>
 
       <ListItem button key='Sync2' onClick={() => SyncAllConfFiles()}>
@@ -100,6 +111,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = state => {
+
   return {
     user: state.signIn.user,
     userlang: state.signIn.userlang
