@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {setState} from 'react'
 import Preview from './Components/Preview';
 import {Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';

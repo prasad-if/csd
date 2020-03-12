@@ -41,15 +41,17 @@ export default class Preview extends React.Component{
             console.log(error);
           }
         );
+
+        this.props.allowBack(true);
     }
 
     store(field, value){
         this.props.isStale(true)
         this.setState( {...this.state, [field] : value})
+        this.props.allowBack(false);
     }
 
     render(){
-
         if(typeof this.props.json.survey === 'undefined'){
             return (<div style={{color:'red'}}>Error: <b>survey</b> object is missing </div>);
         }
