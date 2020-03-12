@@ -42,13 +42,11 @@ export default class Preview extends React.Component{
           }
         );
 
-        this.props.allowBack(true);
     }
 
     store(field, value){
         this.props.isStale(true)
         this.setState( {...this.state, [field] : value})
-        this.props.allowBack(false);
     }
 
     render(){

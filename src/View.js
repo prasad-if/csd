@@ -109,33 +109,20 @@ class View extends React.Component {
 
               <Dialog open={this.state.open} disableBackdropClick={true}
                 onClose={this.handleCancel} PaperComponent={PaperComponent} >
-                <DialogTitle
-                    style={{
-                        cursor: 'move',
-                        borderBottom: '1px groove lightgray'
-                    }} id="draggable-dialog-title"><b>The current questionnaire is not saved !!</b>
+                <DialogTitle style={{cursor: 'move'}} id="draggable-dialog-title">
+                  <b>The current questionnaire is not saved !!</b>
                 </DialogTitle>
                 <DialogContent>
-                <Fade in={this.state.loading} unmountOnExit style={{
-                    transitionDelay: this.state.loading ? '800ms' : '0ms',
-                }}>
-                    <LinearProgress />
-                </Fade>
-                    <Paper>
-                     Moving out of the page will lose the data. Are you sure you want to go back ?
-                    </Paper>
+                     Moving out loses the data! Are you sure you want to go back ?
                 </DialogContent>
                 <DialogActions>
-                    <Button className="bbutton" onClick={this.handleCancel}> Cancel </Button>
-                    <Button
-                        className="bbutton"
-                        onClick={this.handleSubmit}
-                        style={{
-                            color:'white',
-                            backgroundColor:'rgb(74, 119, 229)',
-                            width:'auto'
-                        }}
-                    > Done </Button>
+                    <Button className="bbutton" onClick={this.handleSubmit}> Yes </Button>
+                    <Button className="bbutton" style={{
+                        color:'white',
+                        backgroundColor:'rgb(74, 119, 229)',
+                        width:'auto'
+                    }} onClick={this.handleCancel}> Cancel </Button>
+
                 </DialogActions>
             </Dialog>
           </div>
