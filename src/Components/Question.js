@@ -11,7 +11,7 @@ import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import DetectIcon from '@material-ui/icons/MyLocation';
 import CameraIcon from '@material-ui/icons/CameraAlt';
-import { Plugins, CameraResultType} from '@capacitor/core';
+import { Plugins, CameraSource, CameraDirection, CameraResultType} from '@capacitor/core';
 import { makeStyles } from '@material-ui/core/styles';
 import QrReader from 'react-qr-reader';
 import { WasmDecoder } from "@impactdk/barcode-scanner";
@@ -58,7 +58,7 @@ export default function Question(props){
 
     async function takePicture(qid) {
         const image = await Camera.getPhoto({
-          resultType: CameraResultType.Uri
+          resultType: CameraResultType.DataUrl, direction: CameraDirection.Rear, source: CameraSource.Camera,
         });
         console.log(image);
         props.store(qid, image)
@@ -342,7 +342,7 @@ export default function Question(props){
                 </Button>
             : null }
 
-            <img id="camera image" src={props.answers[props.uid].webPath} alt="" height="40%" style={{padding: '5px', objectFit:'cover'}} />
+            <img id="camera image" src={props.answers[props.uid].dataUrl} alt="" width="20%" height="20%" style={{padding: '5px', width: '20%', height: '20%', objectFit:'cover'}} />
 
             </form>
         );

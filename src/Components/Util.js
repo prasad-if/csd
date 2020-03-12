@@ -38,23 +38,30 @@ const SyncAllConfFiles = () => {
     });
 }
 
-const SyncSurvey = (dbentry, username) => {
+const SyncSurvey = async (dbentry, username) => {
 
-  dbentry.survey.sections.map( (section, sidx) => {
+  await dbentry.survey.sections.map( (section, sidx) => {
       section.questions.map( (quest, idx) =>  {
       const answer = dbentry.answers['s'+sidx+'_q'+idx];
-      if (quest.type === 'image' && answer !== undefined && answer.webPath && answer.webPath !== '') {
+      if (quest.type === 'image' && answer !== undefined && answer.dataUrl && answer.dataUrl !== '') {
         const type = answer.format;
         const s3url = dbentry.survey.id+'/'+username+'_'+quest.id+'_'+(new Date().getTime()+'.'+type);
-        Push2S3(s3url, type, answer.webPath.slice(answer.webPath.indexOf(':')));
-        dbentry.answers[section.id+'_'+quest.id] = answer;
+
+        Storage.put(s3url, answer.dataUrl, {
+            contentType: 'image/'+type
+        })
+        .catch(err => console.log(err))
+        .then (result => {
+            dbentry.answers['s'+sidx+'_q'+idx] = result;
+        })
+
       }
   })});
 
   const { deleteRecord  } = useIndexedDB('surveys');
   API.post('api', '/survey/1', {body: dbentry})
   .then(response => {
-  
+
       deleteRecord(dbentry.id).then({
       }).catch(error => {
           console.log(error.response)
@@ -83,14 +90,14 @@ const SaveLocale = (user, locale) => {
         })
 }
 
-const Push2S3 = (url, type, media) => {
+const Push2S3 = (url, type, media, updateDB) => {
     console.log(url, type)
     Storage.put(url, media, {
         contentType: 'image/'+type
     })
     .catch(err => console.log(err))
     .then (result => {
-        //this.setState({...this.state, open:false, loading: false });
+        updateDB();
     })
 }
 

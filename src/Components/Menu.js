@@ -30,10 +30,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Menu(props) {
+  console.log(props)
   const classes = useStyles();
   const [state, setState] = React.useState({
-    user: {},
-    userlang: "_en"
+    user: props.user,
+    userlang: props.userlang
   });
 
   const changeLang = (lang) => {
@@ -62,7 +63,7 @@ function Menu(props) {
       </List>
       <Divider />
       <List>
-      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(props.user.username)}>
+      <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
         <ListItemText primary='Sync Surveys' />
       </ListItem>
