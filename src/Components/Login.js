@@ -12,6 +12,8 @@ import { Hub } from 'aws-amplify'
 import { useIndexedDB } from 'react-indexed-db';
 
 function Login(props){
+
+    console.log(props);
     const [state, setState] = React.useState({
         username : "prasad@ideafactors.com",
         password : "testing@1234",
@@ -19,7 +21,7 @@ function Login(props){
         loginError: "",
         loading: false,
         user: {},
-        userlang: "_en"
+        userlang: props.lang
     })
 
     const {getCurrentSession} = props;
@@ -79,7 +81,7 @@ function Login(props){
         else{
             props.signIn(state);
             console.log(props.lang)
-            setState({...state, loading: true, loginError:"", lang:props.lang});
+            setState({...state, loading: true, loginError:"", lang:props.userlang});
 
             if( props.username === '' ){
                 add({id:0, username: state.username.trim(), lang: '_en'}).then( resp => {}, err =>{console.log(err);})

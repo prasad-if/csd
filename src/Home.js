@@ -61,7 +61,7 @@ class Home extends React.Component {
               this.setState({ ...this.state, username: user.username, lang: user.lang});
             }
             else{
-              this.setState({ ...this.state, username: '', lang: user.lang});
+              this.setState({ ...this.state, username: '', lang: '_en'});
             }
         }, event => { console.log(event)});
 
