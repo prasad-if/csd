@@ -6,6 +6,7 @@ import { signIn } from './store/Actions/SignInAction'
 import SurveyPicker from './Components/SurveyPicker';
 import Menu from './Components/Menu';
 import './App.css';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 class View extends React.Component {
     constructor(props){
@@ -16,7 +17,13 @@ class View extends React.Component {
       this.props.signIn();
     }
 
+
+
     render() {
+      const backToListing = () => {
+        this.props.processYAML("");
+      }
+
       console.log(this.props.user.username);
       if(this.props.editor === false && (typeof this.props.user.username === 'undefined' ||
         this.props.user.username === null ||
@@ -30,18 +37,20 @@ class View extends React.Component {
        return  (
         <div >
             <div className="topbar">
-
-                  <div style={{float:'left', height:'50px', width:'50px'}}>
+                  <div style={{float:'left', height:'50px', display:'flex', flexDirection:'row', alignItems:'center'}}>
+                    { this.props.editor === false && this.props.json !== null && this.props.json !== "" ?
+                      <ArrowBackIosIcon height='40px' style={{paddingLeft: '5px'}} onClick={backToListing} />
+                      : null }
                     <img src={
-                      (typeof this.props.json !== 'undefined' &&
+                      (typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== ""  &&
                       typeof this.props.json.survey  !== 'undefined' &&
                       typeof this.props.json.survey.logo !== 'undefined' &&
                       this.props.json.survey.logo !== null &&
                       this.props.json.survey.logo !== "" ) ? this.props.json.survey.logo : this.props.logo
                     } alt="Surveykshan" height='40px' style={{padding: '5px', objectFit:'cover'}} />
                   </div>
-                    <div style={{color:'white', fontSize:'medium', paddingLeft:'20px', float: 'left'}}>
-                      { (typeof this.props.json !== 'undefined' &&
+                    <div style={{color:'white', fontSize:'medium', float: 'left'}}>
+                      { (typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== "" && this.props.err == "" &&
                         typeof this.props.json.survey  !== 'undefined' &&
                         typeof this.props.json.survey.title !== 'undefined' &&
                         this.props.json.survey.title !== null &&

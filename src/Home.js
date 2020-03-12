@@ -21,7 +21,7 @@ class Home extends React.Component {
 
     processYAML(survey) {
 
-            let json = "";
+        let json = "";
             try{
                 json = YAML.parse(survey);
 
@@ -34,8 +34,9 @@ class Home extends React.Component {
                 });
             }
             catch(error){
-                this.setState({ ...this.state, yaml : survey, err:error})
+                this.setState({ ...this.state, yaml : survey, json: "", err:error})
             }
+
     }
 
     processURL(url){
