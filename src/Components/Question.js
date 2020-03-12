@@ -33,8 +33,6 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       width: '100%',
       textAlign: 'center',
-      fontFamily: 'Noto Serif SC',
-      fontSize: 'small',
       flexGrow: 1,
       border: '1px solid'
     },
@@ -91,9 +89,22 @@ export default function Question(props){
     function onChange(event){
         if(event.target.type === "checkbox"){
             props.store(event.target.name, event.target.checked);
-        }else{
+        }else {
             props.store(event.target.name, event.target.value);
         }
+
+        if( event.target.type === "select" && event.target.value === 'Other'){
+            props.store(event.target.name+'_other', '');
+        }
+        else if( event.target.type === "multiselect" && event.target.checked === 'Other'){
+            props.store(event.target.name+'_other', '');
+        }
+    }
+
+    function onChangeOther(event){
+        //if(event.target.type === "select"){
+            props.store(event.target.name+'_other', event.target.value);
+        //}
     }
 
     function onMultiSelect(event, controlName){
@@ -255,10 +266,11 @@ export default function Question(props){
 
         options = (
             <form className={classes.root}>
-                    <Select name={props.uid} autoWidth={false} onChange={onChange} value={props.answers[props.uid]}>
+                    <Select name={props.uid} autoWidth={false} onChange={onChange} value={props.answers[props.uid]} >
                         {vals}
                         {conditionalVals}
                     </Select>
+                    <TextField name={props.uid} onChange={onChangeOther} value={props.answers[props.uid+'_other']} fullWidth style={props.answers[props.uid] !== 'Other' ? { display: 'none'}: {}}/>
             </form>
         );
     }
@@ -294,7 +306,7 @@ export default function Question(props){
         const langOptions = typeof props.question["options"+lang] !== "undefined" && props.question["options"+lang] !== null;
 
         const vals = hasOptions ? (langOptions? props.question["options"+lang] : props.question.options).map((option) => {
-            return (<FormControlLabel control=
+            return (<div><FormControlLabel control=
                 {
                     <Checkbox
                     color="primary"
@@ -302,7 +314,8 @@ export default function Question(props){
                     name={option}
                     checked={props.answers[props.uid].indexOf(option) !== -1}
                     onChange={(e) => onMultiSelect(e, props.uid)} />
-                } label={option} key={option} />)
+
+                } label={option} key={option} />{ (option === 'Other' && props.answers[props.uid].indexOf(option) !== -1 )? <TextField name={props.uid} onChange={onChangeOther} value={props.answers[props.uid+'_other']} fullWidth/>:null}</div>)
         }): null;
 
         let conditionalVals = [];
