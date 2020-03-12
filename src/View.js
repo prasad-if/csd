@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {setState} from 'react'
 import Preview from './Components/Preview';
 import {Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,21 +7,39 @@ import SurveyPicker from './Components/SurveyPicker';
 import Menu from './Components/Menu';
 import './App.css';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import Snackbar from '@material-ui/core/Snackbar';
+
 
 class View extends React.Component {
     constructor(props){
       super(props);
-      this.state = { surveys : []};
+      this.state = { surveys : [], syncFlag : true, showError: false};
+
+      this.allowBack = this.allowBack.bind(this);
+      this.handleErrorClose = this.handleErrorClose.bind(this);
     }
     componentDidMount(){
       this.props.signIn();
+    }
+
+    allowBack(bool){
+      this.setState({ ...this.state, syncFlag : bool});
+    }
+
+    handleErrorClose(){
+      this.setState({ ...this.state, showError : false});
     }
 
 
 
     render() {
       const backToListing = () => {
-        this.props.processYAML("");
+        if(this.state.syncFlag){
+          this.props.processYAML("");
+        }
+        else{
+          this.setState({ ...this.state, showError: true});
+        }
       }
 
       console.log(this.props.user.username);
@@ -64,12 +82,25 @@ class View extends React.Component {
 
             </div>
               {typeof this.props.json !== 'undefined' && this.props.json !== null && this.props.json !== "" ?
-                <Preview json={this.props.json} setNav={this.setNav} editor={this.props.editor} />
+                <Preview json={this.props.json} setNav={this.setNav} editor={this.props.editor} allowBack={this.allowBack}/>
               : typeof this.props.err !== 'undefined' && this.props.err !== null && this.props.err !== "" ?
                 <div style={{color:'red'}}>Error: {this.props.err.message} at line number {this.props.err.parsedLine}  </div>
               : this.props.editor === false && typeof this.props.user.username !== 'undefined' && this.props.user.username !== null && this.props.user.username !== "" ?
                 <SurveyPicker processURL={this.props.processURL}/>
               : null}
+          
+          <Snackbar 
+                open={this.state.showError} 
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                autoHideDuration={6000} 
+                message="Survey is in progress. Cannot go back without submitting the responses."
+                onClose={this.handleErrorClose}
+          >
+
+          </Snackbar>
           </div>
        )
     }
