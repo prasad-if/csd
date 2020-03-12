@@ -114,7 +114,7 @@ class App extends React.Component {
   render() {
 
     const user = { username: this.state.username, lang: this.state.lang };
-    console.log(">>>>>>>user object ", user)
+    
     return (
       <UserProvider value={{user}}>
       <div className="App" style={{height: this.props.height, width: this.props.width}}>

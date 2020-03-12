@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -15,6 +15,9 @@ import { signOut } from '../store/Actions/SignOutAction'
 import { connect } from 'react-redux';
 import { SyncAllSurveys, SyncAllConfFiles, SaveLocale } from './Util'
 import { useIndexedDB } from 'react-indexed-db';
+import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,13 +30,20 @@ const useStyles = makeStyles(theme => ({
   },
   selected: {
     color: 'red'
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-start',
   }
 }));
 
 function Menu(props) {
   //console.log(props)
   const classes = useStyles();
-
+  const theme = useTheme();
   const [state, setState] = React.useState({
     user: props.user,
     userlang: props.userlang,
@@ -41,16 +51,20 @@ function Menu(props) {
   });
 
   const {getAll } = useIndexedDB('surveys');
+  const { getByID } = useIndexedDB('user');
+
+  React.useEffect(() => {
+    getByID(0).then( user => {
+        if(user){
+          setState({...state, userlang: user.lang});
+        }
+    }, event => { console.log(event)});
+  }, [])
 
   const updateCount = () => {
     getAll().then( data => {
       setState({...state, surveycount :''+data.length})
     })
-  }
-
-  const toggle = (status) => {
-    console.log(status)
-    toggleDrawer('right', status);
   }
 
   const changeLang = (lang) => {
@@ -59,16 +73,28 @@ function Menu(props) {
   }
 
   const toggleDrawer = (side, open) => event => {
+
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
+    setState({ ...state, [side]: open })
 
-    setState({ ...state, [side]: open });
+    getAll().then( data => {
+      setState({...state, surveycount :''+data.length,[side]: open})
+    }, err => {
+      setState({ ...state, [side]: open })
+    })
 
   };
 
   const sideList = side => (
     <div className={classes.list} role="presentation">
+      <div className={classes.drawerHeader}>
+        <IconButton onClick={toggleDrawer('right', false)}>
+          {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </IconButton>
+      </div>
+      <Divider />
       <List>
         {LocaleConfig.languages.map((item, index) =>(
           <ListItem button key={item.id} style={state.userlang === item.id ? {color:'red'}: null} onClick={() => changeLang(item.id)}>
@@ -81,7 +107,7 @@ function Menu(props) {
       <List>
       <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username, updateCount)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
-        <ListItemText primary={'Sync Survey Responses ('+state.surveycount+')'} />
+        <ListItemText primary={'Sync Responses ('+state.surveycount+')'} />
       </ListItem>
 
       <ListItem button key='Sync2' onClick={() => SyncAllConfFiles()}>

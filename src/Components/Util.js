@@ -58,8 +58,6 @@ const SyncSurvey = async (dbentry, username, updateCount) => {
       }
   })});
 
-  console.log(dbentry);
-  
   const { deleteRecord  } = useIndexedDB('surveys');
   API.post('api', '/survey/1', {body: dbentry})
   .then(response => {
@@ -87,7 +85,6 @@ const SyncAllSurveys = (username, updateCount) => {
 const SaveLocale = (user, locale) => {
     const { update } = useIndexedDB('user');
     update({id:0, username: user.username, lang: locale}).then( event => {
-          console.log(event);
         }, err => {
           console.log(err)
         })
