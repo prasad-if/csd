@@ -12,6 +12,8 @@ import { Hub } from 'aws-amplify'
 import { useIndexedDB } from 'react-indexed-db';
 
 function Login(props){
+
+    console.log(props);
     const [state, setState] = React.useState({
         username : "prasad@ideafactors.com",
         password : "testing@1234",
@@ -19,7 +21,7 @@ function Login(props){
         loginError: "",
         loading: false,
         user: {},
-        userlang: "_en"
+        userlang: props.lang
     })
 
     const {getCurrentSession} = props;
@@ -31,6 +33,7 @@ function Login(props){
 
     React.useEffect(() => {
         Hub.listen('auth', (data) => {
+            console.log(payload.event);
           const { payload } = data
            if(payload.event === 'signIn_failure'){
              console.log('login failure')
@@ -45,12 +48,6 @@ function Login(props){
     function handleKeyDown(e){
         if(e.keyCode === 13) {
             handleLogin();
-        }
-    }
-
-    function handleKeyDownPwd(e){
-        if(e.keyCode === 13) {
-            changePassword();
         }
     }
 
@@ -79,7 +76,7 @@ function Login(props){
         else{
             props.signIn(state);
             console.log(props.lang)
-            setState({...state, loading: true, loginError:"", lang:props.lang});
+            setState({...state, loading: true, loginError:"", lang:props.userlang});
 
             if( props.username === '' ){
                 add({id:0, username: state.username.trim(), lang: '_en'}).then( resp => {}, err =>{console.log(err);})
@@ -90,16 +87,19 @@ function Login(props){
         }
     }
 
-    if(typeof props.user.username !== 'undefined' && props.user.username !== null){
+     const newp = typeof props.challenge !== 'undefined' &&
+                    props.challenge === "NEW_PASSWORD_REQUIRED" ;
+    if(newp){
+        console.log("Redirecting");
+        return (
+            <Redirect to='/changepassword' />
+        )
+    }
+    else if(typeof props.user.username !== 'undefined' && props.user.username !== null){
         return (
             <Redirect to='/preview' />
         )
     }
-
-    const newp = typeof props.challenge !== 'undefined' &&
-                    props.challenge === "NEW_PASSWORD_REQUIRED" ;
-
-    const label = newp ? 'Change Password' : 'Login';
 
     return (
         <div className="centered">
@@ -112,18 +112,11 @@ function Login(props){
             <div style={{color:'red', fontSize: 'small', padding: '10px'}}>{state.loginError}</div>
 
             <div style={{padding:'50px'}}>
-                {newp ?
-                    <TextField fullWidth id="newpassword" label="New Password" type="password"
-                    autoComplete="new-password" onChange={handleChange} value={state.newpassword} required
-                    onKeyDown={handleKeyDownPwd}/>
-                :
-                    [<TextField autoFocus key="username" fullWidth id="username" label="Email Address" type="email"
-                        autoComplete="username" onChange={handleChange} value={state.username} required/>,
+                    <TextField autoFocus key="username" fullWidth id="username" label="Email Address" type="email"
+                        autoComplete="username" onChange={handleChange} value={state.username} required/>
                     <TextField fullWidth key="password" id="password" label="Password" type="password"
                         autoComplete="current-password" onChange={handleChange} value={state.password}
-                        onKeyDown={handleKeyDown} required />]
-                }
-
+                        onKeyDown={handleKeyDown} required />
                 <div style={{width: '100%'}}>
                     <Fade in={state.loading} unmountOnExit style={{
                         transitionDelay: state.loading ? '800ms' : '0ms',
@@ -138,11 +131,11 @@ function Login(props){
                         <Button variant="outlined" onClick={handleCancel} color="primary" style={{margin: '20px'}}> Cancel </Button>
                         <Button
                             variant="contained"
-                            onClick={newp ? changePassword : handleLogin}
+                            onClick={handleLogin}
                             color="primary"
                             style={{margin: '20px'}}
                         >
-                            {label}
+                            Login
                         </Button>
                 </div>
             </div>

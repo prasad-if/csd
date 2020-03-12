@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "copy": "copyfiles -a './build/**/*.*' ./mobileapp",
+    "copy": "copyfiles -a ./build/**/*.* ./mobileapp",
     "android": "cd mobileapp && npx cap copy && cd android && gradlew assembleDebug",
     "build": "react-scripts build && npm run copy && npm run android",
     "test": "react-scripts test",

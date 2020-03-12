@@ -16,7 +16,6 @@ export const signIn  = (params) => {
         else{
 
             Auth.signIn(params.username, params.password).then(data => {
-                console.log(data)
                 dispatch({type : "LOGIN_SUCCESS", data})
             })
             .catch((err) => {

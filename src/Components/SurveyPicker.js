@@ -33,25 +33,32 @@ class SurveyPicker extends React.Component {
           gridTemplateColumns: 'auto auto',
           flexWrap: 'wrap',
           overflow: 'auto',
-          margin: '0 auto'
+          margin: '0 auto',
+          border: '1px solid red'
         }
         const list = {
           width: '100%',
-          height: '95%'
+          height: '95vh',
+          border: '1px solid green',
+          display:'flex',
+          flexDirection:'row',
+          justifyContent: 'center',
+          overflowY: 'scroll',
+          padding: '30px'
         }
         const paper = {
           maxWidth: '50%',
           margin: `10px 10px`,
           padding: '10px',
-          width: '40%',
-          paddingTop:'20px'
+          width: '100%',
+          paddingTop:'20px',
         }
 
         const survys = this.state.surveys.map((surv, i) => {
             return (
 
                 <Paper key={i} style={paper}>
-                  <Grid container spacing={1} onClick={() => this.handleClick(surv.yaml)}>
+                  <Grid container spacing={1} style={{cursor:'pointer'}} onClick={() => this.handleClick(surv.yaml)}>
                     <Grid item >
                       <Avatar src={surv.icon}>{surv.category}</Avatar>
                     </Grid>
@@ -65,11 +72,9 @@ class SurveyPicker extends React.Component {
         });
 
         return (
-          <div style={root}>
             <Grid container direction='column' style={list}>
                 {survys}
             </Grid>
-          </div>
         )
 
     }

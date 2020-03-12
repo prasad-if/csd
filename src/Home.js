@@ -6,6 +6,7 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import logo from './logo.png';
 import YAML from "yamljs";
 import Login from './Components/Login'
+import ChangePassword from './Components/ChangePassword'
 import {Redirect} from 'react-router-dom';
 import { UserProvider } from "./Components/UserContext";
 import { useIndexedDB } from 'react-indexed-db';
@@ -22,7 +23,7 @@ class Home extends React.Component {
 
     processYAML(survey) {
 
-            let json = "";
+        let json = "";
             try{
                 json = YAML.parse(survey);
 
@@ -37,8 +38,9 @@ class Home extends React.Component {
                 console.log(this.state)
             }
             catch(error){
-                this.setState({ ...this.state, yaml : survey, err:error})
+                this.setState({ ...this.state, yaml : survey, json: "", err:error})
             }
+
     }
 
     processURL(url){
@@ -84,7 +86,7 @@ class Home extends React.Component {
               this.setState({ ...this.state, username: user.username, lang: user.lang});
             }
             else{
-              this.setState({ ...this.state, username: '', lang: user.lang});
+              this.setState({ ...this.state, username: '', lang: '_en'});
             }
         }, event => { console.log(event)});
 
@@ -111,6 +113,10 @@ class Home extends React.Component {
                     </Route>
                     <Route exact path='/signin' render={
                             (props) => <Login {...this.state} logo={logo} />
+                        }
+                    />
+                    <Route exact path='/changepassword' render={
+                            (props) => <ChangePassword {...this.state} logo={logo} />
                         }
                     />
                     <Route exact path='/preview' render={
