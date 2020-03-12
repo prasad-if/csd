@@ -7,6 +7,8 @@ export default class Preview extends React.Component{
     constructor(props){
         super(props);
 
+        console.log(props)
+
         let mystateObj = {}
         let questionLookup = {}
         this.props.json.survey.sections.forEach((section, i) => {
@@ -33,6 +35,7 @@ export default class Preview extends React.Component{
         add({survey:this.props.json.survey, answers:this.state}).then(
           event => {
             console.log('ID Generated: ', event);
+            this.props.isStale(false)
           },
           error => {
             console.log(error);
@@ -43,6 +46,7 @@ export default class Preview extends React.Component{
     }
 
     store(field, value){
+        this.props.isStale(true)
         this.setState( {...this.state, [field] : value})
         this.props.allowBack(false);
     }

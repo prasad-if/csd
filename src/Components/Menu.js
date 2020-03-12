@@ -48,6 +48,11 @@ function Menu(props) {
     })
   }
 
+  const toggle = (status) => {
+    console.log(status)
+    toggleDrawer('right', status);
+  }
+
   const changeLang = (lang) => {
     setState({...state, user: props.user, userlang: lang});
     SaveLocale(props.user, lang)
@@ -59,6 +64,7 @@ function Menu(props) {
     }
 
     setState({ ...state, [side]: open });
+
   };
 
   const sideList = side => (
@@ -75,7 +81,7 @@ function Menu(props) {
       <List>
       <ListItem button key='Sync1' onClick={() => SyncAllSurveys(state.user.username, updateCount)}>
         <ListItemIcon><SyncIcon /></ListItemIcon>
-        <ListItemText primary={'Sync Surveys Responses'} secondary={state.surveycount === '' ? 'No pending responses' : state.surveycount +' responses pending sync'} />
+        <ListItemText primary={'Sync Survey Responses ('+state.surveycount+')'} />
       </ListItem>
 
       <ListItem button key='Sync2' onClick={() => SyncAllConfFiles()}>

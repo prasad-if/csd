@@ -1,5 +1,4 @@
 import React from 'react';
-import ScrollableTabsButtonAuto from './ScrollableTabsButtonAuto'
 import { useIndexedDB } from 'react-indexed-db';
 
 export default class DPreview extends React.Component{

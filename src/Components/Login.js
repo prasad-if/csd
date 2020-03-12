@@ -13,7 +13,6 @@ import { useIndexedDB } from 'react-indexed-db';
 
 function Login(props){
 
-    console.log(props);
     const [state, setState] = React.useState({
         username : "prasad@ideafactors.com",
         password : "testing@1234",
