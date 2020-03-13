@@ -41,7 +41,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Menu(props) {
-  //console.log(props)
   const classes = useStyles();
   const theme = useTheme();
   const [state, setState] = React.useState({

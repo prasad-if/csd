@@ -52,7 +52,8 @@ export default function Question(props){
             rowcount : 1,
             colcount : 1,
             textAlign: 'center',
-            addRows : false
+            addRows : false,
+            valid: true
     })
 
     async function getCurrentPosition(qid) {
@@ -62,11 +63,15 @@ export default function Question(props){
         props.store(qid, [coordinates.coords.latitude, coordinates.coords.longitude]);
     }
 
+    React.useEffect(() => {
+        props.subscribe(props.uid, subscribe)
+        subscribe();
+    }, [])
+
     async function takePicture(qid) {
         const image = await Camera.getPhoto({
           resultType: CameraResultType.DataUrl, direction: CameraDirection.Rear, source: CameraSource.Camera,
         });
-        console.log(image);
         props.store(qid, image)
     }
 
@@ -105,6 +110,18 @@ export default function Question(props){
         //if(event.target.type === "select"){
             props.store(event.target.name+'_other', event.target.value);
         //}
+    }
+
+    function subscribe(){
+
+      if(typeof props.question.condition !== "undefined" &&  props.question.condition !== null && props.question.condition !== ""){
+
+        const satisfied = props.question.condition.every( (condition) => {
+          return validateCondition(condition.split(" "))
+        })
+
+        setState({...state, valid: satisfied})
+      }
     }
 
     function onMultiSelect(event, controlName){
@@ -157,9 +174,11 @@ export default function Question(props){
 
     function validateCondition(conditionArray){
         let result = false;
-        //console.log(conditionArray);
         if(conditionArray[1] === "is" ){
-            if(""+props.answers[props.questionLookup[conditionArray[0]]] === conditionArray[2].replace(/'/g, '')){
+
+            console.log( props.questionLookup[conditionArray[0]], props.lookup(props.questionLookup[conditionArray[0]]) )
+
+            if(""+props.lookup(props.questionLookup[conditionArray[0]]) === conditionArray[2].replace(/'/g, '')){
                 result = true;
             }
         }
@@ -215,16 +234,6 @@ export default function Question(props){
                     color="primary"
                     checked={props.answers[props.uid] !== "" && props.answers[props.uid]} />
                 : null;
-
-    if(typeof props.question.condition !== "undefined" &&
-            props.question.condition !== null
-            && props.question.condition !== ""
-        )
-    {
-        if(!validateConditionGroup(props.question.condition)){
-            return null;
-        }
-    }
 
     let options = null;
     if(props.question.type === 'textbox'){
@@ -432,7 +441,9 @@ export default function Question(props){
                 subquestion={true}
                 store={saveGrid}
                 answers={props.answers}
+                subscribe={props.subscribe}
                 questionLookup={[]}
+                lookup={props.lookup}
               />
 
               </TableCell>
@@ -519,7 +530,7 @@ export default function Question(props){
     }
 
     return (
-        <div className="question" style={props.question.type === 'hidden' ? { position: 'absolute !important',top: '-9999px !important', left: '-9999px !important'}: {}}>
+        <div className="question" style={{ display: (props.question.type === 'hidden' || !state.valid ) ? 'none': ''}}>
             <div className="question text" style={props.subquestion !== undefined ? { position: 'absolute', overflow: 'hidden', clip: 'rect(0 0 0 0)',height: '1px', width: '1px', margin: '-1px', padding: '0', border: '0'}: {display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
                 {props.question[`text${lang}`]?props.question[`text${lang}`]:props.question.text}{asterisk}  {chk}
             </div>

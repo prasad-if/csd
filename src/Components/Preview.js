@@ -7,10 +7,9 @@ export default class Preview extends React.Component{
     constructor(props){
         super(props);
 
-        console.log(props)
-
         let mystateObj = {}
         let questionLookup = {}
+        let subscribers = new Map()
         this.props.json.survey.sections.forEach((section, i) => {
             if(typeof section.questions !== "undefined" && section.questions !== null){
                 section.questions.forEach((question, j) => {
@@ -25,7 +24,10 @@ export default class Preview extends React.Component{
         this.state = mystateObj;
         this.store = this.store.bind(this);
         this.submit = this.submit.bind(this);
+        this.subscribe = this.subscribe.bind(this);
+        this.lookup = this.lookup.bind(this);
         this.questionLookup = questionLookup;
+        this.questionpub = subscribers;
     }
 
     submit(){
@@ -44,9 +46,29 @@ export default class Preview extends React.Component{
 
     }
 
+    lookup(uid){
+       return this.state[uid]
+    }
+
     store(field, value){
         this.props.isStale(true)
-        this.setState( {...this.state, [field] : value})
+        this.setState( {...this.state, [field] : value}, this.publish)
+    }
+
+    publish()
+    {
+      this.questionpub.forEach( (subscriber) => {
+        subscriber()
+      });
+    }
+
+    subscribe(uid, subscriber)
+    {
+      //console.log('registered', uid, this.questionpub)
+      if(subscriber && this.questionpub)
+      {
+        this.questionpub.set(uid, subscriber);
+      }
     }
 
     render(){
@@ -77,6 +99,8 @@ export default class Preview extends React.Component{
                     questionLookup={this.questionLookup}
                     editor={this.props.editor}
                     submit={this.submit}
+                    subscribe={this.subscribe}
+                    lookup={this.lookup}
                 />
             )
         }
