@@ -121,6 +121,11 @@ export default function Question(props){
         })
 
         setState({...state, valid: satisfied})
+
+        if(satisfied != state.valid)
+        {
+          props.unsubscribe(props.uid, state.valid)
+        }
       }
     }
 
@@ -442,6 +447,7 @@ export default function Question(props){
                 store={saveGrid}
                 answers={props.answers}
                 subscribe={props.subscribe}
+                unsubscribe={props.unsubscribe}
                 questionLookup={[]}
                 lookup={props.lookup}
               />

@@ -109,6 +109,7 @@ const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.
                             answers={props.answers}
                             questionLookup={props.questionLookup}
                             subscribe={props.subscribe}
+                            unsubscribe={props.unsubscribe}
                             lookup={props.lookup}
                             sectionId={i}
                           />

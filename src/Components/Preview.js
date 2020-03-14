@@ -10,6 +10,7 @@ export default class Preview extends React.Component{
         let mystateObj = {}
         let questionLookup = {}
         let subscribers = new Map()
+        let invalidquestions = []
         this.props.json.survey.sections.forEach((section, i) => {
             if(typeof section.questions !== "undefined" && section.questions !== null){
                 section.questions.forEach((question, j) => {
@@ -25,13 +26,35 @@ export default class Preview extends React.Component{
         this.store = this.store.bind(this);
         this.submit = this.submit.bind(this);
         this.subscribe = this.subscribe.bind(this);
+        this.unsubscribe = this.unsubscribe.bind(this);
         this.lookup = this.lookup.bind(this);
         this.questionLookup = questionLookup;
         this.questionpub = subscribers;
+        this.invalidquestions = invalidquestions;
+        this.showsnack = false;
     }
 
     submit(){
         console.log("&&& inside submit "+JSON.stringify(this.state))
+
+        const goodtogo = this.props.json.survey.sections.every( (section, i) =>{
+           section.questions.every( (quest, j) => {
+              const uid = 's'+i+'_q'+j
+              if ((this.state[uid] && this.state[uid] !== undefined && this.state[uid] !== '') || this.invalidquestions.indexOf(uid) === -1)
+              {
+                return false
+              }
+              return true
+           })
+        })
+
+        console.log(goodtogo)
+
+        if(!goodtogo){
+          this.showsnack = true;
+          return false
+        }
+
         const { add } = useIndexedDB('surveys');
 
         add({survey:this.props.json.survey, answers:this.state}).then(
@@ -43,7 +66,7 @@ export default class Preview extends React.Component{
             console.log(error);
           }
         );
-
+        return true
     }
 
     lookup(uid){
@@ -64,10 +87,19 @@ export default class Preview extends React.Component{
 
     subscribe(uid, subscriber)
     {
-      //console.log('registered', uid, this.questionpub)
-      if(subscriber && this.questionpub)
+      if(subscriber)
       {
         this.questionpub.set(uid, subscriber);
+      }
+    }
+
+    unsubscribe(uid, valid)
+    {
+      if(valid && this.invalidquestions.indexOf(uid) == -1)
+      {
+        this.invalidquestions.push(uid);
+      }else if (!valid && this.invalidquestions.indexOf(uid) != -1){
+        this.invalidquestions.splice(this.invalidquestions.indexOf(uid));
       }
     }
 
@@ -92,6 +124,7 @@ export default class Preview extends React.Component{
         } */
         else{
             return (
+              <div>
                 <ScrollableTabsButtonAuto
                     survey={this.props.json.survey}
                     store={this.store}
@@ -100,8 +133,10 @@ export default class Preview extends React.Component{
                     editor={this.props.editor}
                     submit={this.submit}
                     subscribe={this.subscribe}
+                    unsubscribe={this.unsubscribe}
                     lookup={this.lookup}
                 />
+              </div>
             )
         }
     }
