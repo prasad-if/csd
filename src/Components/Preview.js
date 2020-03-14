@@ -35,13 +35,14 @@ export default class Preview extends React.Component{
     }
 
     submit(){
-        console.log("&&& inside submit "+JSON.stringify(this.state))
+        //console.log("&&& inside submit "+JSON.stringify(this.state))
 
         const goodtogo = this.props.json.survey.sections.every( (section, i) =>{
            section.questions.every( (quest, j) => {
               const uid = 's'+i+'_q'+j
-              if ((this.state[uid] && this.state[uid] !== undefined && this.state[uid] !== '') || this.invalidquestions.indexOf(uid) === -1)
+              if ( (this.state[uid] == undefined || this.state[uid] == '') && (quest.mandatory && quest.mandatory != undefined && quest.mandatory == true) && this.invalidquestions.indexOf(uid) == -1)
               {
+                console.log(uid, this.state[uid])
                 return false
               }
               return true
