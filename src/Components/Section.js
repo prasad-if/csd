@@ -17,9 +17,7 @@ export default function Section(props) {
             store={props.store}
             answers={props.answers}
             questionLookup={props.questionLookup}
-            subscribe={props.subscribe}
             unsubscribe={props.unsubscribe}
-            lookup={props.lookup}
           />
       )
   }) : [];

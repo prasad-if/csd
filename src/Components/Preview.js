@@ -9,7 +9,6 @@ export default class Preview extends React.Component{
 
         let mystateObj = {}
         let questionLookup = {}
-        let subscribers = new Map()
         let invalidquestions = []
         this.props.json.survey.sections.forEach((section, i) => {
             if(typeof section.questions !== "undefined" && section.questions !== null){
@@ -25,13 +24,9 @@ export default class Preview extends React.Component{
         this.state = mystateObj;
         this.store = this.store.bind(this);
         this.submit = this.submit.bind(this);
-        this.subscribe = this.subscribe.bind(this);
         this.unsubscribe = this.unsubscribe.bind(this);
-        this.lookup = this.lookup.bind(this);
         this.questionLookup = questionLookup;
-        this.questionpub = subscribers;
         this.invalidquestions = invalidquestions;
-        this.showsnack = false;
     }
 
     submit(){
@@ -52,7 +47,6 @@ export default class Preview extends React.Component{
         console.log(goodtogo)
 
         if(!goodtogo){
-          this.showsnack = true;
           return false
         }
 
@@ -70,28 +64,9 @@ export default class Preview extends React.Component{
         return true
     }
 
-    lookup(uid){
-       return this.state[uid]
-    }
-
     store(field, value){
         this.props.isStale(true)
-        this.setState( {...this.state, [field] : value}, this.publish)
-    }
-
-    publish()
-    {
-      this.questionpub.forEach( (subscriber) => {
-        subscriber()
-      });
-    }
-
-    subscribe(uid, subscriber)
-    {
-      if(subscriber)
-      {
-        this.questionpub.set(uid, subscriber);
-      }
+        this.setState( {...this.state, [field] : value})
     }
 
     unsubscribe(uid, valid)
@@ -133,9 +108,7 @@ export default class Preview extends React.Component{
                     questionLookup={this.questionLookup}
                     editor={this.props.editor}
                     submit={this.submit}
-                    subscribe={this.subscribe}
                     unsubscribe={this.unsubscribe}
-                    lookup={this.lookup}
                 />
               </div>
             )

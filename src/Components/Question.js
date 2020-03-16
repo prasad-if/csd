@@ -63,11 +63,6 @@ export default function Question(props){
         props.store(qid, [coordinates.coords.latitude, coordinates.coords.longitude]);
     }
 
-    React.useEffect(() => {
-        props.subscribe(props.uid, subscribe)
-        subscribe();
-    }, [])
-
     async function takePicture(qid) {
         const image = await Camera.getPhoto({
           resultType: CameraResultType.DataUrl, direction: CameraDirection.Rear, source: CameraSource.Camera,
@@ -110,23 +105,6 @@ export default function Question(props){
         //if(event.target.type === "select"){
             props.store(event.target.name+'_other', event.target.value);
         //}
-    }
-
-    function subscribe(){
-
-      if(typeof props.question.condition !== "undefined" &&  props.question.condition !== null && props.question.condition !== ""){
-
-        const satisfied = props.question.condition.every( (condition) => {
-          return validateCondition(condition.split(" "))
-        })
-
-        setState({...state, valid: satisfied})
-
-        if(satisfied != state.valid)
-        {
-          props.unsubscribe(props.uid, state.valid)
-        }
-      }
     }
 
     function onMultiSelect(event, controlName){
@@ -181,9 +159,7 @@ export default function Question(props){
         let result = false;
         if(conditionArray[1] === "is" ){
 
-            console.log( props.questionLookup[conditionArray[0]], props.lookup(props.questionLookup[conditionArray[0]]) )
-
-            if(""+props.lookup(props.questionLookup[conditionArray[0]]) === conditionArray[2].replace(/'/g, '')){
+            if(""+props.answers[props.questionLookup[conditionArray[0]]] === conditionArray[2].replace(/'/g, '')){
                 result = true;
             }
         }
@@ -226,7 +202,6 @@ export default function Question(props){
           currentVal[rowid] = [];
         }
         currentVal[rowid][colid] = value;
-        console.log(rowid, colid, currentVal[rowid][colid], currentVal);
         props.store(props.uid, currentVal)
     }
 
@@ -239,6 +214,16 @@ export default function Question(props){
                     color="primary"
                     checked={props.answers[props.uid] !== "" && props.answers[props.uid]} />
                 : null;
+
+    if(typeof props.question.condition !== "undefined" &&
+                        props.question.condition !== null
+                        && props.question.condition !== ""
+                    )
+    {
+          if(!validateConditionGroup(props.question.condition)){
+                        return null;
+          }
+    }
 
     let options = null;
     if(props.question.type === 'textbox'){
@@ -446,10 +431,8 @@ export default function Question(props){
                 subquestion={true}
                 store={saveGrid}
                 answers={props.answers}
-                subscribe={props.subscribe}
                 unsubscribe={props.unsubscribe}
                 questionLookup={[]}
-                lookup={props.lookup}
               />
 
               </TableCell>

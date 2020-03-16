@@ -1,11 +1,11 @@
 {"surveys":[
-    {"name":"Conservation of Natural Resources","category":"Environment", "id":"E1", "yaml":"Environment/CNR.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
-    {"name":"Integrated Development of Wildlife Habitats","category":"Environment", "id":"E2", "yaml":"Environment/IDWH.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
-    {"name":"National Mission for Green India","category":"Environment", "id":"E3", "yaml":"Environment/NMGI.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
-    {"name":"Accelerated Irrigation Benefit Programme","category":"Water", "id":"W1", "yaml":"Water/AIBP.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
-    {"name":"Command Area Development","category":"Water", "id":"W2", "yaml":"Water/CADWM.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
-    {"name":"Per Drop More Crop","category":"Water", "id":"W3", "yaml":"Water/PDMC.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
-    {"name":"Repair, Renovation and Restoration","category":"Water", "id":"W4", "yaml":"Water/RRR.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
-    {"name":"Surface Minor Irrigation","category":"Water", "id":"W5", "yaml":"Water/SMI.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
-    {"name":"Watershed Development Component","category":"Water", "id":"W6", "yaml":"Water/WDC.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"}
+    {"name":"Conservation of Natural Resources","category":"Environment", "id":"CNR", "yaml":"Environment/CNR.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
+    {"name":"Integrated Development of Wildlife Habitats","category":"Environment", "id":"IDWH", "yaml":"Environment/IDWH.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
+    {"name":"National Mission for Green India","category":"Environment", "id":"NMGI", "yaml":"Environment/NMGI.yml", "icon":"http://moef.gov.in/wp-content/uploads/2018/10/xright_logo.png.pagespeed.ic.r8AZqLL07A.png"},
+    {"name":"Accelerated Irrigation Benefit Programme","category":"Water", "id":"AIBP", "yaml":"Water/AIBP.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
+    {"name":"Command Area Development","category":"Water", "id":"CADWM", "yaml":"Water/CADWM.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
+    {"name":"Per Drop More Crop","category":"Water", "id":"PDMC", "yaml":"Water/PDMC.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
+    {"name":"Repair, Renovation and Restoration","category":"Water", "id":"RRR", "yaml":"Water/RRR.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
+    {"name":"Surface Minor Irrigation","category":"Water", "id":"SMI", "yaml":"Water/SMI.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"},
+    {"name":"Watershed Development Component","category":"Water", "id":"WDC", "yaml":"Water/WDC.yml", "icon":"http://mowr.gov.in/sites/all/themes/mwrd/images/swach-bharat.png"}
 ]}
