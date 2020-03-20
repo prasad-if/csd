@@ -86,6 +86,7 @@ export default class Preview extends React.Component{
             console.log(error);
           }
         );
+        this.publish('','')
         return true
     }
 
