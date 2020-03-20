@@ -23,6 +23,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import pattern from './Format.json'
 
 const { Camera } = Plugins;
 const { Geolocation } = Plugins;
@@ -53,8 +54,18 @@ export default function Question(props){
             colcount : 1,
             textAlign: 'center',
             addRows : false,
-            valid: true
+            valid: true,
     })
+
+    const [formatValid, setFormatValid] = React.useState(true);
+    const [mandatoryFail, setMandatoryFail] = React.useState(true);
+
+     React.useEffect(() => {
+         if ( !props.question.mandatory || props.question.mandatory === undefined || !props.question.mandatory)
+         {
+           setMandatoryFail(false)
+         }
+     }, [])
 
     async function getCurrentPosition(qid) {
         const coordinates = await Geolocation.getCurrentPosition();
@@ -87,6 +98,7 @@ export default function Question(props){
     }
 
     function onChange(event){
+
         if(event.target.type === "checkbox"){
             props.store(event.target.name, event.target.checked);
         }else {
@@ -99,12 +111,20 @@ export default function Question(props){
         else if( event.target.type === "multiselect" && event.target.checked === 'Other'){
             props.store(event.target.name+'_other', '');
         }
+
+        if( event.target.type === "text"  && props.question.format !== undefined && props.question.format !== null && props.question.format !== '' ){
+            setFormatValid( new RegExp(pattern[props.question.format]).test(event.target.value) )
+        }
+        if ( props.question.mandatory !== undefined && props.question.mandatory && (props.question.type === 'textbox' || props.question.type === 'textarea') && ( event.target.value === '' )){
+          setMandatoryFail(true)
+        }else{
+          setMandatoryFail(false)
+        }
+
     }
 
     function onChangeOther(event){
-        //if(event.target.type === "select"){
-            props.store(event.target.name+'_other', event.target.value);
-        //}
+        props.store(event.target.name+'_other', event.target.value);
     }
 
     function onMultiSelect(event, controlName){
@@ -158,7 +178,6 @@ export default function Question(props){
     function validateCondition(conditionArray){
         let result = false;
         if(conditionArray[1] === "is" ){
-
             if(""+props.answers[props.questionLookup[conditionArray[0]]] === conditionArray[2].replace(/'/g, '')){
                 result = true;
             }
@@ -215,13 +234,10 @@ export default function Question(props){
                     checked={props.answers[props.uid] !== "" && props.answers[props.uid]} />
                 : null;
 
-    if(typeof props.question.condition !== "undefined" &&
-                        props.question.condition !== null
-                        && props.question.condition !== ""
-                    )
+    if( props.question.condition !== undefined && props.question.condition !== null&& props.question.condition !== "")
     {
           if(!validateConditionGroup(props.question.condition)){
-                        return null;
+                return null;
           }
     }
 
@@ -229,7 +245,7 @@ export default function Question(props){
     if(props.question.type === 'textbox'){
         options = (
             <form className={classes.root}>
-                    <TextField name={props.uid} onChange={onChange} value={props.answers[props.uid]} fullWidth/>
+                    <TextField name={props.uid} onChange={onChange} value={props.answers[props.uid]} style={formatValid?{}:{border:'1px solid red'}} fullWidth/>
             </form>
         );
     }
@@ -237,7 +253,7 @@ export default function Question(props){
         options = (
             <form className={classes.root}>
                     <TextField name={props.uid} multiline row={5} variant="outlined" onChange={onChange}
-                    value={props.answers[props.uid]} fullWidth/>
+                    value={props.answers[props.uid]} style={formatValid?{}:{border:'1px solid red'}} fullWidth/>
             </form>
         );
     }
@@ -311,10 +327,10 @@ export default function Question(props){
                     color="primary"
                     value={option}
                     name={option}
-                    checked={props.answers[props.uid].indexOf(option) !== -1}
+                    checked={ (props.answers[props.uid] && props.answers[props.uid] !== undefined && props.answers[props.uid] !== null && Array.isArray(props.answers[props.uid]) ) ? props.answers[props.uid].indexOf(option) !== -1 : false}
                     onChange={(e) => onMultiSelect(e, props.uid)} />
 
-                } label={option} key={option} />{ (option === 'Other' && props.answers[props.uid].indexOf(option) !== -1 )? <TextField name={props.uid} onChange={onChangeOther} value={props.answers[props.uid+'_other']} fullWidth/>:null}</div>)
+                } label={option} key={option} />{ (option === 'Other' && Array.isArray(props.answers[props.uid]) && props.answers[props.uid].indexOf(option) !== -1 )? <TextField name={props.uid} onChange={onChangeOther} value={props.answers[props.uid+'_other']} fullWidth/>:null}</div>)
         }): null;
 
         let conditionalVals = [];
@@ -432,6 +448,7 @@ export default function Question(props){
                 store={saveGrid}
                 answers={props.answers}
                 unsubscribe={props.unsubscribe}
+                submitState={props.submitState}
                 questionLookup={[]}
               />
 
@@ -482,7 +499,7 @@ export default function Question(props){
                </TableBody>
                </Table>
                </TableContainer>
-               { (props.question.rows.addmore !== 'undefined' && props.question.rows.addmore) ?
+               { (props.question.rows.addmore !== undefined && props.question.rows.addmore) ?
                <Button variant="outlined" color="primary" onClick={() => addCount()}>
                    Add Row
                </Button>
@@ -519,7 +536,8 @@ export default function Question(props){
     }
 
     return (
-        <div className="question" style={{ display: (props.question.type === 'hidden' || !state.valid ) ? 'none': ''}}>
+
+        <div className="question" style={ (props.question.type === 'hidden' || !state.valid)? {display:'none'}: {}} style={ (mandatoryFail && props.submitState) ? {border: '1px solid red'}: {}}>
             <div className="question text" style={props.subquestion !== undefined ? { position: 'absolute', overflow: 'hidden', clip: 'rect(0 0 0 0)',height: '1px', width: '1px', margin: '-1px', padding: '0', border: '0'}: {display:'flex', flexDirection:'row', justifyContent:'flex-start'}}>
                 {props.question[`text${lang}`]?props.question[`text${lang}`]:props.question.text}{asterisk}  {chk}
             </div>

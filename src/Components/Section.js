@@ -18,11 +18,13 @@ export default function Section(props) {
             answers={props.answers}
             questionLookup={props.questionLookup}
             unsubscribe={props.unsubscribe}
+            subscribe={props.subscribe}
+            submitState={props.submitState}
           />
       )
   }) : [];
     return (
-        <TabPanel value={props.value} index={props.index} >
+        <TabPanel value={props.value} index={props.index} style={{textColor:'red'}}>
             <div className="surveyform" >
                 {questions}
             </div>

@@ -34,7 +34,13 @@ const useStyles = makeStyles(theme => ({
 export default function ScrollableTabsButtonAuto(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [submitState, setSubmitState] = React.useState(false);
   const [lang] = React.useState('_en');
+  const [tabId, setTabId] = React.useState('');
+
+  React.useEffect(() => {
+      props.subscribe("temp", subscribe)
+  }, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,6 +49,11 @@ export default function ScrollableTabsButtonAuto(props) {
   const goto = (newValue) => {
     setValue(newValue);
   };
+
+  const subscribe = (sid, qid) => {
+    setSubmitState(true)
+    setTabId(sid)
+  }
 
    const tabs = typeof props.survey.sections !== 'undefined' &&  props.survey.sections !== null ?
       props.survey.sections.map((section, i) => {
@@ -54,6 +65,7 @@ export default function ScrollableTabsButtonAuto(props) {
               label={typeof section.title !== 'undefined' ? section.title: ""}
               {...a11yProps(i)}
               key={'Section '+i}
+              style={ (i === tabId)? {color:'red'}:{}}
             />
         )
     }) : [];
@@ -109,12 +121,16 @@ const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.
                             answers={props.answers}
                             questionLookup={props.questionLookup}
                             unsubscribe={props.unsubscribe}
+                            subscribe={props.subscribe}
+                            submitState={submitState}
                             sectionId={i}
                           />
                       )
                     }) : [];
 
     const viewerStyle = props.editor ? "viewer" : "viewer1";
+
+ console.log(props.submitState)
 
   return (
     <div >
@@ -137,7 +153,7 @@ const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.
           {thankstabpanel}
         </div>
       </div>
-      <Navbar current={value} total={tabs1.length} goto={goto} editor={props.editor} submit={props.submit} />
+      <Navbar current={value} total={tabs1.length} goto={goto} editor={props.editor} submit={props.submit} submitState={submitState}/>
     </div>
   );
 }
