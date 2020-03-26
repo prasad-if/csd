@@ -14,7 +14,7 @@ import CameraIcon from '@material-ui/icons/CameraAlt';
 import { Plugins, CameraSource, CameraDirection, CameraResultType} from '@capacitor/core';
 import QrReader from 'react-qr-reader';
 import { WasmDecoder } from "@impactdk/barcode-scanner";
-import { ReactBarcodeScanner } from "@impactdk/react-barcode-scanner";
+import BarcodeReader from 'react-barcode-reader'
 import UserContext from "./UserContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -409,10 +409,11 @@ export default function Question(props){
         );
     }
     else if(props.question.type === 'barcode'){
+      console.log(props.uid)
         options = (
             <form className={classes.root}>
 
-               <ReactBarcodeScanner decoder={decoder} onFindBarcode={handleBarcode} />
+               <BarcodeReader onScan={handleScan} timeBeforeScanTest="0" onError={handleScanError} scanKeyCode='13' />
 
             </form>
         );

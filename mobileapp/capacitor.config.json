@@ -1,8 +1,8 @@
 {
   "appId": "com.ideafactors.surveykshan",
-  "appName": "mobileapp",
+  "appName": "Surveykshan",
   "bundledWebRuntime": false,
   "npmClient": "npm",
-  "webDir": "build",
+  "webDir": "www",
   "cordova": {}
 }

@@ -142,8 +142,6 @@ const tabpanels = typeof props.survey.sections !== 'undefined' &&  props.survey.
 
     const viewerStyle = props.editor ? "viewer" : "viewer1";
 
- console.log(props.submitState)
-
   return (
     <div >
       <div className={viewerStyle} >

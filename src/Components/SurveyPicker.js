@@ -22,10 +22,18 @@ class SurveyPicker extends React.Component {
     componentDidMount(){
         this.setState({surveys:surveydata.surveys});
         SyncAllConfFiles();
+
+        window.addEventListener('beforeunload',() => { console.log("123.........1")});
+        window.addEventListener('popstate', () => { console.log("234.........1")});
+
+        window.onpopstate  = (e) => {
+  		      //your code...
+            console.log("pop state 1 ")
+  	    }
     }
 
     render(){
-        
+
         const list = {
           width: '100%',
           height: '95vh',
